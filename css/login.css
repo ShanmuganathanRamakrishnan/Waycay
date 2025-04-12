@@ -1,0 +1,93 @@
+/* LEFT SECTION: LOGIN FORM */
+.login-section {
+    width: 50%;
+    padding: 40px;
+    position: relative;
+}
+
+/* Login Container */
+.login-container {
+    max-width: 450px;
+    margin: auto;
+    padding: 40px;
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #E5E5E5;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Welcome Text */
+.welcome-text {
+    font-size: 20px;
+    font-weight: 300;
+    color: #333;
+    margin-bottom: 24px;
+}
+
+/* Sign in Header */
+.signin-header h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.signin-header p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 32px;
+}
+
+/* Password Input */
+.password-input {
+    position: relative;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    background: url('path-to-eye-icon.png') no-repeat center;
+}
+
+/* Form Options */
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #333;
+}
+
+.forgot-password {
+    font-size: 14px;
+    color: #666;
+    text-decoration: none;
+}
+
+/* Account Link Section */
+.account-link {
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+}
+
+.account-link a {
+    color: #0066FF;
+    text-decoration: none;
+    font-weight: 400;
+}
