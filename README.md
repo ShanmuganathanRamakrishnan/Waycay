@@ -1,4 +1,4 @@
-# Waycar 🌍✈️
+# Waycay 🌍✈️
 
 A modern travel planning website that helps you discover destinations, plan your journey, and create unforgettable experiences.
 
