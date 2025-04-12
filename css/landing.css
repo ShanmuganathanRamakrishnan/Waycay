@@ -1,0 +1,161 @@
+/* Landing Page Container */
+.landing-container {
+    min-height: 100vh;
+    width: 100%;
+    background: url('../images/landing.jpg') no-repeat center center;
+    background-size: cover;
+    position: relative;
+    color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Add a dark overlay to make text more readable */
+.landing-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.1) 100%);
+    z-index: 1;
+}
+
+/* Navigation Wrapper */
+.nav-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    padding: 2rem 4rem;
+}
+
+/* Navigation Header */
+.nav-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1920px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.nav-left {
+    flex: 1;
+}
+
+.brand-name {
+    font-size: 24px;
+    font-weight: 500;
+    color: white;
+    text-decoration: none;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.language-selector {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.arrow-down {
+    font-size: 8px;
+    margin-top: 2px;
+}
+
+.nav-divider {
+    width: 1px;
+    height: 24px;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.contact-link {
+    color: white;
+    text-decoration: none;
+    font-weight: 400;
+    font-size: 16px;
+}
+
+/* Hero Content */
+.hero-content {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 2rem;
+    margin-top: -5vh;
+}
+
+.hero-title {
+    font-size: 72px;
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 2.5rem;
+    letter-spacing: -1px;
+    max-width: 1200px;
+}
+
+.hero-description {
+    font-size: 20px;
+    line-height: 1.6;
+    margin-bottom: 3rem;
+    font-weight: 400;
+    max-width: 900px;
+}
+
+.hero-description p {
+    margin-bottom: 0;
+}
+
+/* CTA Section */
+.cta-wrapper {
+    margin-top: 2rem;
+}
+
+/* Start Planning Button */
+.start-planning-btn {
+    display: inline-flex;
+    align-items: center;
+    background: white;
+    color: black;
+    text-decoration: none;
+    padding: 0.75rem 1.5rem 0.75rem 2rem;
+    border-radius: 100px;
+    font-weight: 500;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.start-planning-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.arrow-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: #000;
+    border-radius: 50%;
+    margin-left: 1.5rem;
+}
+
+.arrow-circle svg {
+    width: 16px;
+    height: 16px;
+}
