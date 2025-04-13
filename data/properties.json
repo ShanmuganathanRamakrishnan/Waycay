@@ -1,0 +1,58 @@
+{
+    "properties": [
+        {
+            "id": 1,
+            "title": "Luxury villa",
+            "location": "Malibu Beach, USA",
+            "rating": 4.92,
+            "isGuestFavorite": true,
+            "image": "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&auto=format&fit=crop&q=60",
+            "description": "Stunning beachfront villa with panoramic ocean views"
+        },
+        {
+            "id": 2,
+            "title": "Mountain retreat",
+            "location": "Lake Tahoe, USA",
+            "rating": 4.88,
+            "isGuestFavorite": false,
+            "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&auto=format&fit=crop&q=60",
+            "description": "Cozy cabin nestled in the mountains with lake access"
+        },
+        {
+            "id": 3,
+            "title": "Beachfront condo",
+            "location": "Cancun, Mexico",
+            "rating": 4.95,
+            "isGuestFavorite": true,
+            "image": "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&auto=format&fit=crop&q=60",
+            "description": "Modern condo with direct beach access and resort amenities"
+        },
+        {
+            "id": 4,
+            "title": "Tropical villa",
+            "location": "Bali, Indonesia",
+            "rating": 5.0,
+            "isGuestFavorite": false,
+            "image": "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&auto=format&fit=crop&q=60",
+            "description": "Luxurious villa with private pool and tropical garden"
+        },
+        {
+            "id": 5,
+            "title": "Luxury apartment",
+            "location": "Paris, France",
+            "rating": 4.89,
+            "isGuestFavorite": true,
+            "image": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&auto=format&fit=crop&q=60",
+            "description": "Elegant apartment in the heart of Paris with Eiffel Tower views"
+        },
+        {
+            "id": 6,
+            "title": "City apartment",
+            "location": "New York, USA",
+            "rating": 4.79,
+            "isGuestFavorite": false,
+            "image": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&auto=format&fit=crop&q=60",
+            "description": "Modern apartment in Manhattan with city skyline views"
+        }
+    ]
+}

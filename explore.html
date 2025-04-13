@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waycay - Explore Amazing Destinations</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/explore.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <a href="/">waycay</a>
+            </div>
+
+            <!-- Search Bar - Desktop -->
+            <div class="search-bar">
+                <div class="search-item">
+                    <input type="text" class="search-input" placeholder="Search Destinations">
+                </div>
+                <button class="search-button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+
+            <div class="user-actions">
+                <a href="#" class="plan-trip">Plan a trip</a>
+                <div class="user-menu">
+                    <i class="fas fa-bars"></i>
+                    <div class="menu-divider"></div>
+                    <i class="fas fa-user"></i>
+                    <div class="user-dropdown">
+                        <div class="dropdown-section">
+                            <a href="register.html" class="dropdown-item emphasized">Sign up</a>
+                            <a href="login.html" class="dropdown-item">Log in</a>
+                        </div>
+                        <div class="dropdown-section">
+                            <a href="#" class="dropdown-item">Help Centre</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Search Bar -->
+    <div class="mobile-search">
+        <div class="mobile-search-container">
+            <i class="fas fa-search"></i>
+            <div class="mobile-search-text">
+                <div class="mobile-search-label">Search Destinations</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Category Filters -->
+    <div class="category-filters">
+        <div class="filter-container">
+            <div class="filter-item active">
+                <div class="filter-icon">🏛️</div>
+                <span>Cultural & Historical</span>
+                <div class="dropdown-content">
+                    <a href="#">Historical Landmarks</a>
+                    <a href="#">Museums & Art Galleries</a>
+                    <a href="#">Monuments & Statues</a>
+                    <a href="#">Religious Sites</a>
+                    <a href="#">Heritage Sites</a>
+                </div>
+            </div>
+            <div class="filter-item">
+                <div class="filter-icon">🍽️</div>
+                <span>Food & Drink</span>
+                <div class="dropdown-content">
+                    <a href="#">Restaurants</a>
+                    <a href="#">Street Food Spots</a>
+                    <a href="#">Local Markets</a>
+                    <a href="#">Cafés & Bakeries</a>
+                </div>
+            </div>
+            <div class="filter-item">
+                <div class="filter-icon">🌿</div>
+                <span>Nature & Outdoor</span>
+                <div class="dropdown-content">
+                    <a href="#">Parks & Gardens</a>
+                    <a href="#">Lakes & Waterfalls</a>
+                    <a href="#">Hiking Trails</a>
+                    <a href="#">Beaches</a>
+                    <a href="#">Mountains & Valleys</a>
+                    <a href="#">National Parks</a>
+                </div>
+            </div>
+            <div class="filter-item">
+                <div class="filter-icon">🛍️</div>
+                <span>Shopping & Local Goods</span>
+                <div class="dropdown-content">
+                    <a href="#">Shopping Malls</a>
+                    <a href="#">Local Bazaars</a>
+                    <a href="#">Souvenir Shops</a>
+                    <a href="#">Artisanal Villages</a>
+                </div>
+            </div>
+            <div class="filter-item">
+                <div class="filter-icon">🏃</div>
+                <span>Adventure & Activities</span>
+                <div class="dropdown-content">
+                    <a href="#">Theme Parks</a>
+                    <a href="#">Adventure Sports</a>
+                    <a href="#">Water Sports</a>
+                    <a href="#">Trekking</a>
+                    <a href="#">Skiing</a>
+                </div>
+            </div>
+            <div class="filter-item">
+                <div class="filter-icon">🎭</div>
+                <span>Entertainment & Events</span>
+                <div class="dropdown-content">
+                    <a href="#">Live Shows</a>
+                    <a href="#">Music Festivals</a>
+                    <a href="#">Local Events</a>
+                    <a href="#">Sports Arenas</a>
+                </div>
+            </div>
+            <div class="filter-item">
+                <div class="filter-icon">🧘</div>
+                <span>Relaxation & Wellness</span>
+                <div class="dropdown-content">
+                    <a href="#">Spas & Retreats</a>
+                    <a href="#">Yoga Centers</a>
+                    <a href="#">Thermal Springs</a>
+                    <a href="#">Resorts</a>
+                </div>
+            </div>
+        </div>
+        <button class="filters-button">
+            <i class="fas fa-sliders-h"></i>
+            <span>Filters</span>
+        </button>
+    </div>
+
+    <!-- Property Listings -->
+    <main class="listings">
+        <div class="listings-grid" id="propertyGrid">
+            <!-- Properties will be loaded dynamically from JSON -->
+        </div>
+    </main>
+
+    <!-- Show Map Button -->
+    <button class="show-map-button">
+        <span>Show map</span>
+        <i class="fas fa-map"></i>
+    </button>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>
