@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Register - Waycay{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/register.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- LEFT SECTION: REGISTER FORM -->
+    <div class="register-section">
+        <div class="brand-name">Waycay</div>
+
+        <div class="register-container">
+            <div class="welcome-text">Welcome !</div>
+
+            <div class="signup-header">
+                <h1>Sign up to</h1>
+                <p>Discover the World, One Destination at a Time!</p>
+            </div>
+
+            <form class="register-form" method="POST" action="{% url 'register' %}">
+                {% csrf_token %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="username">User name</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your user name" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="password-input">
+                        <input type="password" id="password" name="password" placeholder="Enter your Password" required />
+                        <span class="password-toggle"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <div class="password-input">
+                        <input type="password" id="confirm-password" name="confirm-password"
+                            placeholder="Confirm your Password" required />
+                        <span class="password-toggle"></span>
+                    </div>
+                </div>
+
+                <button type="submit" class="primary-button">Register</button>
+
+                <div class="account-link">
+                    Already have an Account? <a href="{% url 'login' %}">Login</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- RIGHT SECTION: IMAGE -->
+    <div class="img-section">
+        <img src="{% static 'images/login.jpg' %}" alt="Scenic Destination" />
+    </div>
+</div>
+{% endblock %} 

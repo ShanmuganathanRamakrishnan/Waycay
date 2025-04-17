@@ -16,17 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from django.views.generic import TemplateView
+from core import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-
-    # serve HTML files directly (temporary static-style)
-    path('', TemplateView.as_view(template_name="index.html")),
-    path('login/', TemplateView.as_view(template_name="login.html")),
-    path('register/', TemplateView.as_view(template_name="register.html")),
-    path('planner/', TemplateView.as_view(template_name="planner.html")),
-    path('explore/', TemplateView.as_view(template_name="explore.html")),
-    path('description/', TemplateView.as_view(template_name="description.html")),
+    path('', views.index, name='index'),
+    path('explore/', views.explore, name='explore'),
+    path('description/<int:id>/<str:type>/', views.description, name='description'),
+    path('login/', views.login_view, name='login'),
+    path('register/', views.register_view, name='register'),
+    path('planner/', views.planner, name='planner'),
 ]
 

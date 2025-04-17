@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login - Waycay{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- LEFT SECTION: LOGIN FORM -->
+    <div class="login-section">
+        <div class="brand-name">Waycay</div>
+
+        <div class="login-container">
+            <div class="welcome-text">Welcome !</div>
+
+            <div class="signin-header">
+                <h1>Sign in to</h1>
+                <p>Discover the World, One Destination at a Time!</p>
+            </div>
+
+            <form class="login-form" method="POST" action="{% url 'login' %}">
+                {% csrf_token %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                
+                <div class="form-group">
+                    <label for="username">User name</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your user name" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="password-input">
+                        <input type="password" id="password" name="password" placeholder="Enter your Password" required />
+                        <span class="password-toggle"></span>
+                    </div>
+                </div>
+
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" name="remember" />
+                        <span>Remember me</span>
+                    </label>
+                    <a href="#" class="forgot-password">Forgot Password ?</a>
+                </div>
+
+                <button type="submit" class="primary-button">Login</button>
+
+                <div class="account-link">
+                    Don't have an Account? <a href="{% url 'register' %}">Register</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- RIGHT SECTION: IMAGE -->
+    <div class="img-section">
+        <img src="{% static 'images/login.jpg' %}" alt="Scenic Destination" />
+    </div>
+</div>
+{% endblock %} 
