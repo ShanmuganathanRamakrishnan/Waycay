@@ -46,11 +46,14 @@ class Restaurant(models.Model):
 
 class Hotspot(models.Model):
     destination = models.ForeignKey(Destination, on_delete=models.CASCADE)
+    locationName = models.CharField(max_length=100, blank=True, null=True)
+    category = models.CharField(max_length=50, blank=True, null=True)
     timings = models.CharField(max_length=30, blank=True, null=True)
     rating = models.DecimalField(max_digits=3, decimal_places=2, blank=True, null=True)
     hidden_gem = models.BooleanField(default=False)
     description = models.CharField(max_length=400, blank=True, null=True)
     hotspot_addr = models.CharField(max_length=300, blank=True, null=True)
+    imageUrl = models.CharField(max_length=500, blank=True, null=True)
 
     def __str__(self):
         return f"Hotspot {self.id} - {self.destination.name}"
