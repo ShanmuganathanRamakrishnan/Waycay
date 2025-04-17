@@ -155,6 +155,79 @@
         <i class="fas fa-map"></i>
     </button>
 
+    <!-- Save Prompt -->
+    <div class="save-prompt" id="savePrompt">
+        <div class="save-prompt-content">
+            <h3>Create your first wishlist</h3>
+            <p>Save places you love and share them with your travel buddies</p>
+        </div>
+        <div class="save-prompt-actions">
+            <button class="btn-primary" id="createFirstWishlist">Create wishlist</button>
+            <button class="btn-secondary" id="dismissPrompt">Not now</button>
+        </div>
+    </div>
+
+    <!-- Wishlist Modals -->
+    <!-- Create Wishlist Modal -->
+    <div class="modal-overlay" id="createWishlistModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create wishlist</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="wishlist-form">
+                    <div class="input-group">
+                        <input type="text" id="wishlistName" placeholder="Name" maxlength="50">
+                        <div class="character-count"><span id="charCount">0</span>/50 characters</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary modal-close">Clear</button>
+                <button class="btn-primary" id="createWishlistBtn">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Save to Wishlist Modal -->
+    <div class="modal-overlay" id="saveToWishlistModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Save to wishlist</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="wishlist-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search wishlists">
+                </div>
+                <div class="wishlists-container">
+                    <!-- Wishlists will be populated dynamically -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" id="createNewWishlistBtn">Create new wishlist</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Prompt Modal -->
+    <div class="modal-overlay" id="loginPromptModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Log in to save</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Log in to create and save to wishlists.</p>
+            </div>
+            <div class="modal-footer">
+                <a href="login.html" class="btn-primary">Log in</a>
+            </div>
+        </div>
+    </div>
+
     <script src="js/main.js"></script>
 </body>
 

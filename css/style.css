@@ -8,13 +8,15 @@
 
 body {
     background-color: #f5f5f5;
-    min-height: 100vh;
+    height: 100vh;
+    overflow: hidden;
 }
 
 /* Container to hold both sections */
 .container {
     display: flex;
-    min-height: 100vh;
+    height: 100vh;
+    overflow: hidden;
 }
 
 /* Brand Name */

@@ -501,6 +501,20 @@ function addDays(date, days) {
     return result;
 }
 
+// Destination data
+const destinations = {
+    'kyoto': {
+        title: 'Kyoto',
+        dateRange: 'Sun 30 Mar - Mon 31 Mar',
+        description: 'Experience the ancient capital of Japan with its thousands of classical Buddhist temples, gardens, imperial palaces, Shinto shrines and traditional wooden houses.'
+    },
+    'tokyo': {
+        title: 'Tokyo',
+        dateRange: 'Mon 31 Mar - Tue 01 Apr',
+        description: 'Discover the vibrant metropolis that perfectly blends ultramodern and traditional, from neon-lit skyscrapers to historic temples.'
+    }
+};
+
 // Initialize all common functionalities when DOM is loaded
 document.addEventListener('DOMContentLoaded', function () {
     // Initialize dropdowns
@@ -661,4 +675,205 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Initialize calendars
     initializeCalendars();
-}); 
+
+    // Initialize wishlist modals
+    initializeWishlistModals();
+});
+
+// Wishlist functionality
+const initializeWishlistModals = () => {
+    const loginPromptModal = document.getElementById('loginPromptModal');
+    const createWishlistModal = document.getElementById('createWishlistModal');
+    const saveToWishlistModal = document.getElementById('saveToWishlistModal');
+    const savePrompt = document.getElementById('savePrompt');
+    let currentProperty = null;
+    let saveCount = 0;
+
+    // Mock user state - replace with actual authentication logic
+    const isLoggedIn = false;
+    const hasWishlists = false;
+
+    // Initialize save buttons
+    const initializeSaveButtons = () => {
+        const propertyCards = document.querySelectorAll('.property-card');
+        propertyCards.forEach(card => {
+            const saveButton = document.createElement('button');
+            saveButton.className = 'save-button';
+            saveButton.innerHTML = '<i class="far fa-heart"></i>';
+
+            // Add tooltip
+            const tooltip = document.createElement('div');
+            tooltip.className = 'save-tooltip';
+            tooltip.textContent = 'Save to wishlist';
+
+            // Replace favorite button with save button and add tooltip
+            const imageContainer = card.querySelector('.property-image-container');
+            const existingFavoriteButton = card.querySelector('.favorite-button');
+            if (existingFavoriteButton) {
+                existingFavoriteButton.replaceWith(saveButton);
+            } else {
+                imageContainer.appendChild(saveButton);
+            }
+            imageContainer.appendChild(tooltip);
+
+            // Show tooltip on hover if not saved
+            card.addEventListener('mouseenter', () => {
+                if (!saveButton.classList.contains('saved')) {
+                    tooltip.classList.add('show');
+                }
+            });
+
+            card.addEventListener('mouseleave', () => {
+                tooltip.classList.remove('show');
+            });
+
+            saveButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                currentProperty = card;
+                handleSaveClick(saveButton);
+            });
+        });
+    };
+
+    // Handle save button click
+    const handleSaveClick = (button) => {
+        if (!isLoggedIn) {
+            showModal(loginPromptModal);
+            return;
+        }
+
+        if (!hasWishlists) {
+            saveCount++;
+            if (saveCount === 1) {
+                // First save attempt - show bottom prompt
+                showSavePrompt();
+            } else if (saveCount === 3) {
+                // Third save attempt - show create wishlist modal
+                showModal(createWishlistModal);
+                saveCount = 0; // Reset counter
+            } else {
+                // Toggle save state
+                toggleSaveState(button);
+            }
+        } else {
+            showModal(saveToWishlistModal);
+        }
+    };
+
+    // Toggle save state with animation
+    const toggleSaveState = (button) => {
+        const isSaved = button.classList.contains('saved');
+        const icon = button.querySelector('i');
+
+        if (!isSaved) {
+            button.classList.add('saved');
+            icon.classList.remove('far');
+            icon.classList.add('fas');
+        } else {
+            button.classList.remove('saved');
+            icon.classList.remove('fas');
+            icon.classList.add('far');
+        }
+    };
+
+    // Show save prompt
+    const showSavePrompt = () => {
+        savePrompt.classList.add('show');
+
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+            if (savePrompt.classList.contains('show')) {
+                savePrompt.classList.remove('show');
+            }
+        }, 5000);
+    };
+
+    // Handle prompt buttons
+    const createFirstWishlistBtn = document.getElementById('createFirstWishlist');
+    const dismissPromptBtn = document.getElementById('dismissPrompt');
+
+    if (createFirstWishlistBtn) {
+        createFirstWishlistBtn.addEventListener('click', () => {
+            savePrompt.classList.remove('show');
+            showModal(createWishlistModal);
+        });
+    }
+
+    if (dismissPromptBtn) {
+        dismissPromptBtn.addEventListener('click', () => {
+            savePrompt.classList.remove('show');
+        });
+    }
+
+    // Modal controls
+    const showModal = (modal) => {
+        closeAllModals();
+        modal.classList.add('show');
+    };
+
+    const closeAllModals = () => {
+        [loginPromptModal, createWishlistModal, saveToWishlistModal].forEach(modal => {
+            modal.classList.remove('show');
+        });
+    };
+
+    // Close modal when clicking outside
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('modal-overlay')) {
+            closeAllModals();
+        }
+    });
+
+    // Close buttons
+    document.querySelectorAll('.modal-close').forEach(button => {
+        button.addEventListener('click', closeAllModals);
+    });
+
+    // Create new wishlist button in save modal
+    const createNewWishlistBtn = document.getElementById('createNewWishlistBtn');
+    if (createNewWishlistBtn) {
+        createNewWishlistBtn.addEventListener('click', () => {
+            showModal(createWishlistModal);
+        });
+    }
+
+    // Character counter for wishlist name
+    const wishlistNameInput = document.getElementById('wishlistName');
+    const charCount = document.getElementById('charCount');
+    if (wishlistNameInput && charCount) {
+        wishlistNameInput.addEventListener('input', () => {
+            const count = wishlistNameInput.value.length;
+            charCount.textContent = count;
+
+            // Update create button state
+            const createButton = document.getElementById('createWishlistBtn');
+            if (createButton) {
+                createButton.disabled = count === 0;
+                if (count === 0) {
+                    createButton.classList.add('disabled');
+                } else {
+                    createButton.classList.remove('disabled');
+                }
+            }
+        });
+    }
+
+    // Create wishlist button
+    const createWishlistBtn = document.getElementById('createWishlistBtn');
+    if (createWishlistBtn) {
+        createWishlistBtn.addEventListener('click', () => {
+            const name = wishlistNameInput.value.trim();
+            if (name) {
+                // Here you would typically make an API call to create the wishlist
+                console.log('Creating wishlist:', name);
+                closeAllModals();
+                wishlistNameInput.value = '';
+                charCount.textContent = '0';
+            }
+        });
+    }
+
+    // Initialize save buttons
+    initializeSaveButtons();
+}; 

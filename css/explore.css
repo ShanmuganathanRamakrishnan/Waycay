@@ -600,3 +600,380 @@ button {
         padding: 24px;
     }
 }
+
+/* Wishlist Modal Styles */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-overlay.show {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 12px;
+    width: 520px;
+    max-width: calc(100vw - 32px);
+    max-height: calc(100vh - 32px);
+    overflow-y: auto;
+    position: relative;
+    animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    padding: 24px;
+    border-bottom: 1px solid #ebebeb;
+    position: relative;
+}
+
+.modal-header h2 {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0;
+    color: #222;
+}
+
+.modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 24px;
+    color: #717171;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+}
+
+.modal-close:hover {
+    background-color: #f7f7f7;
+}
+
+.modal-body {
+    padding: 24px;
+}
+
+.modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid #ebebeb;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+/* Wishlist Form Styles */
+.wishlist-form .input-group {
+    position: relative;
+    margin-bottom: 16px;
+}
+
+.wishlist-form input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ebebeb;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.2s ease;
+}
+
+.wishlist-form input:focus {
+    outline: none;
+    border-color: #0066ff;
+}
+
+.character-count {
+    position: absolute;
+    right: 12px;
+    bottom: -20px;
+    font-size: 12px;
+    color: #717171;
+}
+
+/* Wishlist Search Styles */
+.wishlist-search {
+    position: relative;
+    margin-bottom: 24px;
+}
+
+.wishlist-search i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #717171;
+    font-size: 14px;
+}
+
+.wishlist-search input {
+    width: 100%;
+    padding: 12px 12px 12px 36px;
+    border: 1px solid #ebebeb;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.wishlist-search input:focus {
+    outline: none;
+    border-color: #0066ff;
+}
+
+/* Wishlists Container */
+.wishlists-container {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.wishlist-item {
+    padding: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.wishlist-item:hover {
+    background-color: #f7f7f7;
+}
+
+.wishlist-item.selected {
+    background-color: #e6f0ff;
+}
+
+.wishlist-thumbnail {
+    width: 64px;
+    height: 64px;
+    border-radius: 8px;
+    background-color: #f5f5f5;
+    overflow: hidden;
+}
+
+.wishlist-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.wishlist-info {
+    flex: 1;
+}
+
+.wishlist-info h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+    color: #222;
+}
+
+.wishlist-info p {
+    font-size: 14px;
+    color: #717171;
+    margin: 0;
+}
+
+/* Button Styles */
+.btn-primary {
+    background-color: #222;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-primary:hover {
+    background-color: #000;
+}
+
+.btn-secondary {
+    background-color: white;
+    color: #222;
+    border: 1px solid #ebebeb;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #f7f7f7;
+    border-color: #ddd;
+}
+
+/* Save Tooltip and Prompts */
+.save-tooltip {
+    position: absolute;
+    top: 48px;
+    right: 12px;
+    background-color: white;
+    padding: 8px 16px;
+    border-radius: 16px;
+    font-size: 14px;
+    color: #222;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 3;
+    white-space: nowrap;
+}
+
+.save-tooltip::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    right: 16px;
+    width: 12px;
+    height: 12px;
+    background-color: white;
+    transform: rotate(45deg);
+}
+
+.save-tooltip.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.save-prompt {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100%);
+    background-color: #222;
+    color: white;
+    padding: 16px 24px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    max-width: 90vw;
+}
+
+.save-prompt.show {
+    transform: translateX(-50%) translateY(0);
+}
+
+.save-prompt-content {
+    flex: 1;
+}
+
+.save-prompt h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+}
+
+.save-prompt p {
+    font-size: 14px;
+    margin: 0;
+    opacity: 0.8;
+}
+
+.save-prompt-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.save-prompt .btn-primary {
+    background-color: white;
+    color: #222;
+}
+
+.save-prompt .btn-primary:hover {
+    background-color: #f7f7f7;
+}
+
+.save-prompt .btn-secondary {
+    color: white;
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.save-prompt .btn-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Property Card Save State */
+.property-card:hover .save-tooltip {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.save-button {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 2;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.save-button:hover {
+    transform: scale(1.1);
+}
+
+.save-button.saved {
+    color: #ff385c;
+}
+
+.save-button.saved i {
+    animation: heartPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes heartPop {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
