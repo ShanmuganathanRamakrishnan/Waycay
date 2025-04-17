@@ -1,0 +1,269 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Le'bon Bakehouse - Waycay{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+<style>
+    /* Description Page Specific Styles */
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .header {
+        display: flex;
+        align-items: center;
+        padding: 1.5rem 4rem;
+        border-bottom: 1px solid #E5E5E5;
+        background: #fff;
+        position: relative;
+        width: 100%;
+        box-sizing: border-box;
+        height: 72px;
+    }
+
+    .brand-name {
+        text-decoration: none;
+        color: #333;
+        font-weight: 600;
+        font-size: 20px;
+        position: absolute;
+        left: 4rem;
+        line-height: 1;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .nav-menu {
+        margin: 0 auto;
+        display: flex;
+        gap: 2.5rem;
+        line-height: 1;
+    }
+
+    .nav-menu a {
+        text-decoration: none;
+        color: #333;
+        font-weight: 500;
+        font-size: 16px;
+    }
+
+    .nav-menu a.active {
+        color: #0066FF;
+    }
+
+    .language-selector {
+        position: absolute;
+        right: 4rem;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        cursor: pointer;
+        font-size: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        line-height: 1;
+    }
+
+    .arrow-down {
+        font-size: 12px;
+        margin-left: 4px;
+    }
+
+    .main-content {
+        padding: 2rem 4rem;
+        display: flex;
+        gap: 2rem;
+    }
+
+    .left-section {
+        flex: 1;
+        max-width: 50%;
+    }
+
+    .right-section {
+        flex: 1;
+        padding-left: 2rem;
+    }
+
+    .main-image {
+        width: 100%;
+        height: auto;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+    }
+
+    .title {
+        font-size: 32px;
+        font-weight: 600;
+        color: #0066FF;
+        margin-bottom: 0.5rem;
+    }
+
+    .location {
+        color: #666;
+        margin-bottom: 2rem;
+        font-size: 16px;
+    }
+
+    .image-gallery {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .gallery-image {
+        width: 120px;
+        height: 90px;
+        border-radius: 8px;
+        object-fit: cover;
+    }
+
+    .tabs {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .tab {
+        padding: 0.5rem 1.5rem;
+        background: #E8F1FF;
+        border-radius: 100px;
+        color: #333;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    .tab.active {
+        background: #0066FF;
+        color: white;
+    }
+
+    .overview-section {
+        background: white;
+        border: 1px solid #E5E5E5;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .section-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 1rem;
+    }
+
+    .overview-text {
+        color: #666;
+        line-height: 1.6;
+        font-size: 14px;
+    }
+
+    .details-tags {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .tag {
+        padding: 0.5rem 1rem;
+        background: #E8F1FF;
+        border-radius: 100px;
+        color: #333;
+        font-size: 14px;
+    }
+
+    .reviews-section {
+        background: white;
+        border: 1px solid #E5E5E5;
+        border-radius: 12px;
+        padding: 1.5rem;
+        min-height: 150px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<header class="header">
+    <a href="{% url 'index' %}" class="brand-name">Waycay.</a>
+    <nav class="nav-menu">
+        <a href="{% url 'index' %}" class="active">Home</a>
+        <a href="{% url 'explore' %}">Explore</a>
+    </nav>
+    <div class="user-actions">
+        <a href="{% url 'planner' %}" class="plan-trip">Plan a trip</a>
+        <div class="user-menu">
+            <i class="fas fa-bars"></i>
+            <div class="menu-divider"></div>
+            <i class="fas fa-user"></i>
+            <div class="user-dropdown">
+                <div class="dropdown-section">
+                    <a href="{% url 'register' %}" class="dropdown-item emphasized">Sign up</a>
+                    <a href="{% url 'login' %}" class="dropdown-item">Log in</a>
+                </div>
+                <div class="dropdown-section">
+                    <a href="#" class="dropdown-item">Help Centre</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="main-content">
+    <div class="left-section">
+        <img src="{% static 'core/images/desc_main.jpg' %}" alt="Le'bon Bakehouse Main" class="main-image">
+    </div>
+
+    <div class="right-section">
+        <h1 class="title">Le'bon Bakehouse</h1>
+        <div class="location">Chicago,United States of america</div>
+
+        <div class="image-gallery">
+            <img src="https://images.unsplash.com/photo-1517433670267-08bbd4be890f?w=500&q=80" alt="Bakery Exterior"
+                class="gallery-image">
+            <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=500&q=80" alt="Bakery Interior"
+                class="gallery-image">
+            <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500&q=80" alt="Bakery Products"
+                class="gallery-image">
+            <img src="https://images.unsplash.com/photo-1556191041-c62eaad8b6c9?w=500&q=80" alt="Baker at Work"
+                class="gallery-image">
+        </div>
+
+        <div class="tabs">
+            <a href="#overview" class="tab active">Overview</a>
+            <a href="#location" class="tab">Location</a>
+            <a href="#contact" class="tab">Contact</a>
+        </div>
+
+        <section class="overview-section">
+            <h2 class="section-title">Overview</h2>
+            <p class="overview-text">
+                Bakehouse is a quaint, mountain bakery located in Landour, Mussoorie, known for its unique handmade
+                cakes, pastries, and sandwiches,some of which are from recipes dating back to the late 1890s. The
+                bakery offers a wide variety of baked items, including fresh breads, cakes, pastries, muffins,
+                tarts, and assorted cookies, reflecting the authentic culinary tradition of Landour.<br><br>
+                52 It is housed in an old-fashioned, charming mountain-style building that replicates a typical
+                19th-century kitchen
+            </p>
+        </section>
+
+        <h2 class="section-title">Details</h2>
+        <div class="details-tags">
+            <span class="tag">Trending</span>
+            <span class="tag">Price range : $$$</span>
+            <span class="tag">Pets Allowed</span>
+            <span class="tag">Lake Nearby</span>
+        </div>
+
+        <section class="reviews-section">
+            <h2 class="section-title">Reviews</h2>
+            <!-- Reviews content will go here -->
+        </section>
+    </div>
+</main>
+{% endblock %} 

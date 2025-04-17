@@ -1,0 +1,244 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Waycay - Trip Planner{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+<link rel="stylesheet" href="{% static 'core/css/planner.css' %}">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<header class="header">
+    <div class="header-container">
+        <div class="logo">
+            <a href="{% url 'explore' %}">waycay</a>
+        </div>
+
+        <div class="user-actions">
+            <div class="user-menu">
+                <i class="fas fa-bars"></i>
+                <div class="menu-divider"></div>
+                <i class="fas fa-user"></i>
+                <div class="user-dropdown">
+                    <div class="dropdown-section">
+                        <a href="{% url 'register' %}" class="dropdown-item emphasized">Sign up</a>
+                        <a href="{% url 'login' %}" class="dropdown-item">Log in</a>
+                    </div>
+                    <div class="dropdown-section">
+                        <a href="#" class="dropdown-item">Help Centre</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="planner-container">
+    <!-- Toggle Button for Sidebar -->
+    <button class="sidebar-toggle">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+
+    <!-- Left Sidebar -->
+    <aside class="sidebar">
+        <div class="trip-info">
+            <div class="trip-header">
+                <div class="trip-title-group">
+                    <div class="trip-name">
+                        <h2>Japan OwO <span class="jp-flag">🇯🇵</span></h2>
+                        <button class="edit-button">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <p class="trip-dates" id="tripDates">30 March - 30 April</p>
+                </div>
+                <div class="trip-stats">
+                    <div class="nights-group">
+                        <div class="nights-badge">2/31</div>
+                        <div class="nights-label">Nights planned</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <nav class="trip-nav">
+            <button class="nav-btn active">Destinations</button>
+        </nav>
+
+        <div class="trip-legend">
+            <div class="legend-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>DESTINATION</span>
+            </div>
+            <div class="legend-item">
+                <i class="fas fa-moon"></i>
+                <span>NIGHTS</span>
+            </div>
+        </div>
+
+        <div class="destinations">
+            <div class="destination-item active">
+                <div class="destination-number">1</div>
+                <div class="destination-details">
+                    <h3>Kyoto</h3>
+                    <p>Sun 30 Mar - Mon 31 Mar</p>
+                </div>
+                <div class="nights-control">
+                    <button class="minus">−</button>
+                    <span>1</span>
+                    <button class="plus">+</button>
+                </div>
+            </div>
+
+            <div class="destination-item">
+                <div class="destination-number">2</div>
+                <div class="destination-details">
+                    <h3>Tokyo</h3>
+                    <p>Mon 31 Mar - Tue 01 Apr</p>
+                </div>
+                <div class="nights-control">
+                    <button class="minus">−</button>
+                    <span>1</span>
+                    <button class="plus">+</button>
+                </div>
+            </div>
+
+            <div class="add-destination">
+                <input type="text" placeholder="Add new destination...">
+            </div>
+        </div>
+
+        <nav class="side-menu">
+            <button class="menu-item"><i class="fas fa-eye"></i><span>View</span></button>
+            <button class="menu-item active"><i class="fas fa-map-pin"></i><span>Plan</span></button>
+            <button class="menu-item"><i class="fas fa-wallet"></i><span>Budget</span></button>
+            <button class="menu-item"><i class="fas fa-suitcase"></i><span>Packing</span></button>
+            <button class="menu-item"><i class="fas fa-bookmark"></i><span>Collection</span></button>
+            <button class="menu-item"><i class="fas fa-compass"></i><span>Discover</span></button>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <section class="main-content">
+        <div class="content-header">
+            <div class="share-actions">
+                <button class="share-btn">
+                    <i class="fas fa-share"></i>
+                    Share trip
+                </button>
+                <button class="movie-btn">
+                    <i class="fas fa-film"></i>
+                    Create movie
+                </button>
+            </div>
+            <div class="view-controls">
+                <button class="notes-toggle">Show notes</button>
+                <button class="view-toggle">
+                    <i class="fas fa-list"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="destination-view">
+            <div class="destination-header">
+                <h1>Kyoto <span class="date-range">Sun 30 Mar - Mon 31 Mar</span></h1>
+                <p class="description">
+                    Experience the ancient capital of Japan with its thousands of classical Buddhist temples,
+                    gardens, imperial palaces, Shinto shrines and traditional wooden houses.
+                </p>
+            </div>
+
+            <div class="itinerary">
+                <h2>Day 1 - Sunday, March 30</h2>
+
+                <div class="timeline">
+                    <!-- Morning -->
+                    <div class="timeline-item">
+                        <div class="time">8:00 AM</div>
+                        <div class="activity restaurant">
+                            <div class="activity-type">
+                                <i class="fas fa-utensils"></i>
+                                Restaurant
+                            </div>
+                            <h3>Traditional Japanese Breakfast at Izusen</h3>
+                            <p>Start your day with a traditional Buddhist vegetarian cuisine (shojin ryori) at this
+                                serene temple restaurant.</p>
+                            <div class="location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Daitokuji Temple, Murasakino, Kita Ward
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Trip Settings Modal -->
+<div class="modal-overlay" id="tripSettingsModal">
+    <div class="trip-settings-modal">
+        <div class="modal-header">
+            <h2 class="modal-title">Japan OwO</h2>
+            <button class="modal-close">×</button>
+        </div>
+        <div class="trip-location">
+            <span class="country-flag">🇯🇵</span>
+            <span class="country-name">Japan</span>
+        </div>
+        <div class="date-range-section">
+            <h3>Start date</h3>
+            <div class="date-input-container">
+                <input type="text" id="startDateInput" placeholder="Start Date" readonly>
+                <div id="startDateCalendar" class="calendar-container">
+                    <div class="calendar-header">
+                        <button onclick="navigateMonth(-1)" class="month-nav">&lt;</button>
+                        <span class="current-month"></span>
+                        <button onclick="navigateMonth(1)" class="month-nav">&gt;</button>
+                    </div>
+                    <div class="calendar-grid"></div>
+                </div>
+            </div>
+            <div class="date-input-container">
+                <input type="text" id="endDateInput" placeholder="End Date" readonly>
+                <div id="endDateCalendar" class="calendar-container">
+                    <div class="calendar-header">
+                        <button onclick="navigateMonth(-1)" class="month-nav">&lt;</button>
+                        <span class="current-month"></span>
+                        <button onclick="navigateMonth(1)" class="month-nav">&gt;</button>
+                    </div>
+                    <div class="calendar-grid"></div>
+                </div>
+            </div>
+        </div>
+        <div class="share-section">
+            <h3>Share your trip</h3>
+            <div class="share-link">
+                <div class="link-display">stippl.io/shanmuu/trip/Japan%20OwO</div>
+                <button class="copy-link-btn">
+                    <i class="fas fa-link"></i>
+                    Copy link
+                </button>
+            </div>
+            <h3>Who can view your trip?</h3>
+            <div class="visibility-options">
+                <button class="visibility-option active">Trip members</button>
+                <button class="visibility-option">My followers</button>
+                <button class="visibility-option">Everyone</button>
+            </div>
+        </div>
+        <button class="delete-trip">
+            <i class="far fa-trash-alt"></i>
+            Delete trip
+        </button>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'core/js/main.js' %}"></script>
+<script src="{% static 'core/js/planner.js' %}"></script>
+{% endblock %} 
