@@ -236,7 +236,272 @@ const loadProperties = () => {
         });
 };
 
-// Initialize all functionalities when DOM is loaded
+// Calendar functionality
+let currentDate = new Date();
+let selectedStartDate = null;
+let selectedEndDate = null;
+let activeCalendar = null;
+
+const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+function initializeCalendars() {
+    const startDateInput = document.getElementById('startDateInput');
+    const endDateInput = document.getElementById('endDateInput');
+    const startDateCalendar = document.getElementById('startDateCalendar');
+    const endDateCalendar = document.getElementById('endDateCalendar');
+
+    if (!startDateInput || !endDateInput || !startDateCalendar || !endDateCalendar) return;
+
+    // Set initial dates
+    const today = new Date();
+    currentDate = new Date(today.getFullYear(), today.getMonth(), 1);
+
+    // Initialize calendar grids
+    const startMonthDisplay = startDateCalendar.querySelector('.current-month');
+    const endMonthDisplay = endDateCalendar.querySelector('.current-month');
+
+    // Add month navigation handlers
+    startDateCalendar.querySelectorAll('.month-nav').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const direction = btn.textContent === '<' ? -1 : 1;
+            currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + direction, 1);
+            renderCalendar();
+        });
+    });
+
+    endDateCalendar.querySelectorAll('.month-nav').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const direction = btn.textContent === '<' ? -1 : 1;
+            currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + direction, 1);
+            renderCalendar();
+        });
+    });
+
+    // Handle input clicks
+    startDateInput.addEventListener('click', (e) => {
+        e.stopPropagation();
+        endDateCalendar.classList.remove('show');
+        startDateCalendar.classList.toggle('show');
+        activeCalendar = 'start';
+        renderCalendar();
+    });
+
+    endDateInput.addEventListener('click', (e) => {
+        e.stopPropagation();
+        startDateCalendar.classList.remove('show');
+        endDateCalendar.classList.toggle('show');
+        activeCalendar = 'end';
+        renderCalendar();
+    });
+
+    // Close calendars when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.calendar-container') &&
+            !e.target.closest('#startDateInput') &&
+            !e.target.closest('#endDateInput')) {
+            startDateCalendar.classList.remove('show');
+            endDateCalendar.classList.remove('show');
+        }
+    });
+
+    // Initial render
+    renderCalendar();
+}
+
+function renderCalendar() {
+    const calendar = document.getElementById(`${activeCalendar}DateCalendar`);
+    if (!calendar) return;
+
+    const currentMonthElement = calendar.querySelector('.current-month');
+    currentMonthElement.textContent = `${months[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+
+    const calendarGrid = calendar.querySelector('.calendar-grid');
+    calendarGrid.innerHTML = '';
+
+    // Add weekday headers
+    weekdays.forEach(day => {
+        const weekdayElement = document.createElement('div');
+        weekdayElement.className = 'weekday';
+        weekdayElement.textContent = day;
+        calendarGrid.appendChild(weekdayElement);
+    });
+
+    const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+    const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+    const today = new Date();
+    const startingDay = firstDay.getDay();
+
+    // Add empty cells for days before the first day of the month
+    for (let i = 0; i < startingDay; i++) {
+        const emptyDay = document.createElement('div');
+        emptyDay.className = 'calendar-day';
+        calendarGrid.appendChild(emptyDay);
+    }
+
+    // Add days of the month
+    for (let day = 1; day <= lastDay.getDate(); day++) {
+        const dayElement = document.createElement('div');
+        dayElement.className = 'calendar-day';
+        dayElement.textContent = day;
+
+        const currentDateToCompare = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+
+        // Add today indicator
+        if (isToday(currentDateToCompare)) {
+            dayElement.classList.add('today');
+        }
+
+        // Add selected state
+        if (activeCalendar === 'start' && isSameDate(currentDateToCompare, selectedStartDate)) {
+            dayElement.classList.add('selected', 'range-start');
+        } else if (activeCalendar === 'end' && isSameDate(currentDateToCompare, selectedEndDate)) {
+            dayElement.classList.add('selected', 'range-end');
+        }
+
+        // Add in-range state
+        if (selectedStartDate && selectedEndDate &&
+            currentDateToCompare > selectedStartDate &&
+            currentDateToCompare < selectedEndDate) {
+            dayElement.classList.add('in-range');
+        }
+
+        // Disable past dates
+        if (currentDateToCompare < new Date(today.getFullYear(), today.getMonth(), today.getDate())) {
+            dayElement.classList.add('disabled');
+        } else {
+            dayElement.addEventListener('click', () => selectDate(currentDateToCompare));
+        }
+
+        calendarGrid.appendChild(dayElement);
+    }
+}
+
+function selectDate(date) {
+    if (activeCalendar === 'start') {
+        selectedStartDate = date;
+        document.getElementById('startDateInput').value = formatDate(date);
+
+        // If end date is before start date, clear it
+        if (selectedEndDate && selectedEndDate < selectedStartDate) {
+            selectedEndDate = null;
+            document.getElementById('endDateInput').value = '';
+        }
+
+        // Update all destination dates starting from the new start date
+        updateDestinationDates(date);
+
+        // Automatically switch to end date selection if no end date is selected
+        if (!selectedEndDate) {
+            activeCalendar = 'end';
+            document.getElementById('startDateCalendar').classList.remove('show');
+            document.getElementById('endDateCalendar').classList.add('show');
+            renderCalendar();
+            return;
+        }
+    } else {
+        // Don't allow end date before start date
+        if (selectedStartDate && date < selectedStartDate) return;
+
+        selectedEndDate = date;
+        document.getElementById('endDateInput').value = formatDate(date);
+
+        // Update destination dates considering the end date
+        if (selectedStartDate) {
+            updateDestinationDates(selectedStartDate);
+        }
+    }
+
+    // Close calendar after selection
+    document.getElementById(`${activeCalendar}DateCalendar`).classList.remove('show');
+
+    // Update trip dates display if both dates are selected
+    if (selectedStartDate && selectedEndDate) {
+        const tripDates = document.getElementById('tripDates');
+        if (tripDates) {
+            tripDates.textContent = `${formatDateForDisplay(selectedStartDate)} - ${formatDateForDisplay(selectedEndDate)}`;
+        }
+    }
+
+    renderCalendar();
+}
+
+function updateDestinationDates(startDate) {
+    const destinationItems = document.querySelectorAll('.destination-item');
+    let currentDate = new Date(startDate);
+
+    destinationItems.forEach((item, index) => {
+        const nights = parseInt(item.querySelector('.nights-control span').textContent);
+        const dateDisplay = item.querySelector('.destination-details p');
+        const endDate = addDays(currentDate, nights);
+        const destinationName = item.querySelector('.destination-details h3').textContent.toLowerCase();
+
+        // Update the date display for this destination
+        dateDisplay.textContent = `${formatDateForDisplay(currentDate)} - ${formatDateForDisplay(endDate)}`;
+
+        // Update destination data
+        if (destinations[destinationName]) {
+            destinations[destinationName].dateRange = `${formatDateForDisplay(currentDate)} - ${formatDateForDisplay(endDate)}`;
+        }
+
+        // If this destination is active, update the destination view
+        if (item.classList.contains('active')) {
+            updateDestinationView(destinationName);
+        }
+
+        // Set start date for next destination
+        currentDate = new Date(endDate);
+    });
+
+    // Update the destination header if it exists
+    const destinationHeader = document.querySelector('.destination-header h1 .date-range');
+    if (destinationHeader) {
+        const activeDestination = document.querySelector('.destination-item.active');
+        if (activeDestination) {
+            const dateText = activeDestination.querySelector('.destination-details p').textContent;
+            destinationHeader.textContent = dateText;
+        }
+    }
+}
+
+function formatDate(date) {
+    if (!date) return '';
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${month}/${day}/${year}`;
+}
+
+function isToday(date) {
+    const today = new Date();
+    return date.getDate() === today.getDate() &&
+        date.getMonth() === today.getMonth() &&
+        date.getFullYear() === today.getFullYear();
+}
+
+function isSameDate(date1, date2) {
+    if (!date1 || !date2) return false;
+    return date1.getDate() === date2.getDate() &&
+        date1.getMonth() === date2.getMonth() &&
+        date1.getFullYear() === date2.getFullYear();
+}
+
+function formatDateForDisplay(date) {
+    if (!date) return '';
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return `${days[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]}`;
+}
+
+function addDays(date, days) {
+    const result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+}
+
+// Initialize all common functionalities when DOM is loaded
 document.addEventListener('DOMContentLoaded', function () {
     // Initialize dropdowns
     initializeDropdowns();
@@ -249,4 +514,151 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Load properties (this will also initialize favorite buttons after loading)
     loadProperties();
+
+    // Destination data
+    const destinations = {
+        'kyoto': {
+            title: 'Kyoto',
+            dateRange: 'Sun 30 Mar - Mon 31 Mar',
+            description: 'Experience the ancient capital of Japan with its thousands of classical Buddhist temples, gardens, imperial palaces, Shinto shrines and traditional wooden houses.'
+        },
+        'tokyo': {
+            title: 'Tokyo',
+            dateRange: 'Mon 31 Mar - Tue 01 Apr',
+            description: 'Discover the vibrant metropolis that perfectly blends ultramodern and traditional, from neon-lit skyscrapers to historic temples.'
+        }
+    };
+
+    // Initialize variables
+    let totalNights = 0;
+    const maxNights = 31;
+    const nightsBadge = document.querySelector('.nights-badge');
+    const destinationItems = document.querySelectorAll('.destination-item');
+    const destinationView = document.querySelector('.destination-view');
+
+    // Function to update nights badge
+    function updateNightsBadge() {
+        nightsBadge.textContent = `${totalNights}/${maxNights}`;
+    }
+
+    // Function to update destination view
+    function updateDestinationView(destinationKey) {
+        const destination = destinations[destinationKey];
+        if (!destination) return;
+
+        const content = `
+            <div class="destination-header">
+                <h1>${destination.title} <span class="date-range">${destination.dateRange}</span></h1>
+                <p class="description">${destination.description}</p>
+            </div>
+        `;
+
+        destinationView.innerHTML = content;
+    }
+
+    // Add date utility functions
+    function formatDate(date) {
+        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+        return `${days[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]}`;
+    }
+
+    function addDays(date, days) {
+        const result = new Date(date);
+        result.setDate(result.getDate() + days);
+        return result;
+    }
+
+    // Function to update dates for all destinations
+    function updateAllDates() {
+        let currentDate = new Date(startDate);
+
+        destinationItems.forEach((item, index) => {
+            const nights = parseInt(item.querySelector('.nights-control span').textContent);
+            const dateDisplay = item.querySelector('.destination-details p');
+            const endDate = addDays(currentDate, nights);
+
+            // Update the date display
+            dateDisplay.textContent = `${formatDate(currentDate)} - ${formatDate(endDate)}`;
+
+            // Update destination data
+            const destinationName = item.querySelector('.destination-details h3').textContent.toLowerCase();
+            if (destinations[destinationName]) {
+                destinations[destinationName].dateRange = `${formatDate(currentDate)} - ${formatDate(endDate)}`;
+            }
+
+            // If this destination is active, update the destination view
+            if (item.classList.contains('active')) {
+                updateDestinationView(destinationName);
+            }
+
+            // Set start date for next destination
+            currentDate = endDate;
+        });
+    }
+
+    // Initialize start date (March 30, 2024)
+    const startDate = new Date(2024, 2, 30);  // Month is 0-based
+
+    // Handle destination item clicks
+    destinationItems.forEach(item => {
+        item.addEventListener('click', function () {
+            // Remove active class from all items
+            destinationItems.forEach(di => di.classList.remove('active'));
+            // Add active class to clicked item
+            this.classList.add('active');
+
+            // Get destination name and update view
+            const destinationName = this.querySelector('.destination-details h3').textContent.toLowerCase();
+            updateDestinationView(destinationName);
+        });
+
+        // Update nights control handlers
+        const nightsControl = item.querySelector('.nights-control');
+        const nightsDisplay = nightsControl.querySelector('span');
+
+        nightsControl.querySelector('.plus').addEventListener('click', function (e) {
+            e.stopPropagation();
+            const currentNights = parseInt(nightsDisplay.textContent);
+            if (totalNights < maxNights) {
+                nightsDisplay.textContent = currentNights + 1;
+                totalNights++;
+                updateNightsBadge();
+                updateAllDates();  // Update dates when nights change
+            }
+        });
+
+        nightsControl.querySelector('.minus').addEventListener('click', function (e) {
+            e.stopPropagation();
+            const currentNights = parseInt(nightsDisplay.textContent);
+            if (currentNights > 0) {
+                nightsDisplay.textContent = currentNights - 1;
+                totalNights--;
+                updateNightsBadge();
+                updateAllDates();  // Update dates when nights change
+            }
+        });
+    });
+
+    // Calculate initial total nights
+    destinationItems.forEach(item => {
+        const nights = parseInt(item.querySelector('.nights-control span').textContent);
+        totalNights += nights;
+    });
+    updateNightsBadge();
+
+    // Sidebar toggle functionality
+    const sidebarToggle = document.querySelector('.sidebar-toggle');
+    const plannerContainer = document.querySelector('.planner-container');
+
+    sidebarToggle.addEventListener('click', function () {
+        plannerContainer.classList.toggle('collapsed');
+    });
+
+    // Initialize dates
+    updateAllDates();
+
+    // Initialize calendars
+    initializeCalendars();
 }); 
