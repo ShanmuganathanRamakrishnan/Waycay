@@ -1197,3 +1197,25 @@ button {
     color: #666;
     font-size: 16px;
 }
+
+.property-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: transform 0.2s ease;
+}
+
+.property-link:hover {
+    transform: translateY(-5px);
+}
+
+.hotspot-name {
+    color: #0066FF;
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.hotspot-name:hover {
+    text-decoration: underline;
+}

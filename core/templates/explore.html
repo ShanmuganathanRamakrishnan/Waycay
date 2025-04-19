@@ -160,22 +160,28 @@
     </div>
     {% else %}
     <div class="listings-grid" id="propertyGrid">
-        {% for destination in destinations %}
+        {% for hotspot in hotspots %}
         <div class="property-card">
-            <a href="{% url 'destination_detail' destination_id=destination.destination_id %}">
-                {% if destination.image %}
-                <img src="{{ destination.image.url }}" alt="{{ destination.name }}">
+            <a href="{% url 'hotspot_detail' hotspot_id=hotspot.hotspot_id %}" class="property-link">
+                {% if hotspot.imageUrl %}
+                <img src="{{ hotspot.imageUrl }}" alt="{{ hotspot.locationName }}" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'placeholder-image\'><i class=\'fas fa-map-marker-alt\'></i></div>';">
                 {% else %}
                 <div class="placeholder-image">
-                    <i class="fas fa-mountain"></i>
+                    <i class="fas fa-map-marker-alt"></i>
                 </div>
                 {% endif %}
                 <div class="property-info">
-                    <h3>{{ destination.name }}</h3>
-                    <p>{{ destination.location }}</p>
+                    <h3 class="hotspot-name">{{ hotspot.locationName }}</h3>
+                    <p class="location">{{ hotspot.destination.name }}, {{ hotspot.destination.location }}</p>
+                    {% if hotspot.description %}
+                    <p class="description">{{ hotspot.description|truncatewords:20 }}</p>
+                    {% endif %}
                     <div class="property-rating">
-                        <span class="rating">{{ destination.avg_rating }}</span>
-                        <span class="price-range">{{ destination.price_range }}</span>
+                        <span class="rating">
+                            <i class="fas fa-star"></i>
+                            {{ hotspot.rating }}
+                        </span>
+                        <span class="category">{{ hotspot.category }}</span>
                     </div>
                 </div>
             </a>

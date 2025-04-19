@@ -2,47 +2,39 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Q
-from .models import Destination, Restaurant, Hotspots, Trip_Planner, User
+from django.db.models import Q, Avg
+from .models import Destination, Restaurant, Hotspots, Trip_Planner, User, Review
 from django.core.paginator import Paginator
+from django.utils import timezone
 
 def index(request):
     """Landing page view"""
     return render(request, 'index.html')
 
 def explore(request):
-    """Explore destinations view"""
+    """Explore hotspots view"""
     query = request.GET.get('q', '')
     page_number = request.GET.get('page', 1)
     
-    destinations = Destination.objects.all()
     hotspots = Hotspots.objects.all()
     
     if query:
-        destinations = destinations.filter(
-            Q(name__icontains=query) |
-            Q(location__icontains=query) |
-            Q(region_type__icontains=query)
-        )
         hotspots = hotspots.filter(
             Q(locationName__icontains=query) |
             Q(description__icontains=query) |
-            Q(category__icontains=query)
+            Q(category__icontains=query) |
+            Q(destination__name__icontains=query) |
+            Q(destination__location__icontains=query)
         )
-    
-    # If no destinations found, show all hotspots
-    if not destinations.exists():
-        destinations = Destination.objects.none()
     
     # Paginate hotspots
     paginator = Paginator(hotspots, 15)  # Show 15 hotspots per page
     page_obj = paginator.get_page(page_number)
     
     context = {
-        'destinations': destinations,
         'hotspots': page_obj,
         'query': query,
-        'no_results': not destinations.exists() and not hotspots.exists()
+        'no_results': not hotspots.exists()
     }
     return render(request, 'explore.html', context)
 
@@ -154,3 +146,64 @@ def planner(request):
     if not request.user.is_authenticated:
         return redirect('login')
     return render(request, 'planner.html')
+
+def description(request, destination_id):
+    """Destination description view"""
+    destination = Destination.objects.get(pk=destination_id)
+    hotspots = Hotspots.objects.filter(destination=destination)
+    restaurants = Restaurant.objects.filter(res_location__icontains=destination.location)
+    
+    # Calculate average rating
+    avg_rating = Review.objects.filter(hotspot__in=hotspots).aggregate(Avg('rating'))['rating__avg']
+    if avg_rating is not None:
+        avg_rating = round(avg_rating, 1)
+    
+    context = {
+        'destination': destination,
+        'hotspots': hotspots,
+        'restaurants': restaurants,
+        'avg_rating': avg_rating,
+    }
+    return render(request, 'description.html', context)
+
+def hotspot_detail(request, hotspot_id):
+    """Hotspot description view"""
+    print(f"Hotspot ID: {hotspot_id}")  # Debug print
+    hotspot = Hotspots.objects.get(pk=hotspot_id)
+    nearby_restaurants = Restaurant.objects.filter(res_location__icontains=hotspot.destination.location)
+    reviews = Review.objects.filter(hotspot=hotspot).order_by('-date')
+    
+    # Calculate average rating
+    avg_rating = reviews.aggregate(Avg('rating'))['rating__avg']
+    if avg_rating is not None:
+        avg_rating = round(avg_rating, 1)
+    
+    context = {
+        'hotspot': hotspot,
+        'restaurants': nearby_restaurants,
+        'reviews': reviews,
+        'avg_rating': avg_rating,
+    }
+    return render(request, 'description.html', context)
+
+@login_required
+def add_review(request, hotspot_id):
+    """Handle review submission"""
+    if request.method == 'POST':
+        hotspot = Hotspots.objects.get(pk=hotspot_id)
+        rating = request.POST.get('rating')
+        comment = request.POST.get('comment')
+        
+        # Create the review
+        Review.objects.create(
+            user=request.user,
+            hotspot=hotspot,
+            rating=rating,
+            comments=comment,
+            date=timezone.now().date()
+        )
+        
+        messages.success(request, 'Your review has been submitted successfully!')
+        return redirect('hotspot_detail', hotspot_id=hotspot_id)
+    
+    return redirect('hotspot_detail', hotspot_id=hotspot_id)

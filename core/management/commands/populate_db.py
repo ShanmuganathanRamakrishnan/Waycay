@@ -145,195 +145,60 @@ class Command(BaseCommand):
         ]
 
         # Create Hotspots
-        self.create_hotspots()
+        hotspots = []
+        for destination in destinations:
+            hotspot = Hotspots.objects.create(
+                destination=destination,
+                locationName=f"{destination.name} City Center",
+                category='Cultural & Historical',
+                timings='9:00 AM - 6:00 PM',
+                rating=4.8,
+                hidden_gem=True,
+                description=f"Explore the rich history and culture of {destination.name}",
+                hotspot_addr=f"123 Main Street, {destination.location}",
+                imageUrl=f"https://source.unsplash.com/random/800x600/?{destination.name.lower()}"
+            )
+            hotspots.append(hotspot)
 
         # Create Likes
-        likes = [
-            Likes.objects.create(user=users[0], destination=destinations[0]),
-            Likes.objects.create(user=users[1], destination=destinations[1]),
-            Likes.objects.create(user=users[2], destination=destinations[2]),
-            Likes.objects.create(user=users[3], destination=destinations[3]),
-            Likes.objects.create(user=users[4], destination=destinations[4])
-        ]
+        for i in range(5):
+            Likes.objects.create(
+                user=users[i],
+                destination=destinations[i],
+                hotspot=hotspots[i]
+            )
 
         # Create Reviews
-        reviews = [
+        for i in range(5):
             Review.objects.create(
-                user=users[0],
-                destination=destinations[0],
+                user=users[i],
+                destination=destinations[i],
                 rating=5,
-                comments='Amazing cultural experience!',
-                date=timezone.now()
-            ),
-            Review.objects.create(
-                user=users[1],
-                destination=destinations[1],
-                rating=4,
-                comments='Beautiful city, but crowded',
-                date=timezone.now()
-            ),
-            Review.objects.create(
-                user=users[2],
-                destination=destinations[2],
-                rating=5,
-                comments='Paradise on earth!',
-                date=timezone.now()
-            ),
-            Review.objects.create(
-                user=users[3],
-                destination=destinations[3],
-                rating=4,
-                comments='The city that never sleeps!',
-                date=timezone.now()
-            ),
-            Review.objects.create(
-                user=users[4],
-                destination=destinations[4],
-                rating=5,
-                comments='Breathtaking views and history',
+                comments=f"Amazing experience in {destinations[i].name}!",
                 date=timezone.now()
             )
-        ]
 
         # Create Trip Planners
-        trip_planners = [
-            Trip_Planner.objects.create(
-                user=users[0],
-                trip_name='Japan Adventure',
+        trip_planners = []
+        for i in range(5):
+            planner = Trip_Planner.objects.create(
+                user=users[i],
+                trip_name=f"{destinations[i].name} Adventure",
                 start_date=timezone.now().date(),
                 end_date=timezone.now().date(),
                 budget=2000.00
-            ),
-            Trip_Planner.objects.create(
-                user=users[1],
-                trip_name='European Tour',
-                start_date=timezone.now().date(),
-                end_date=timezone.now().date(),
-                budget=3000.00
-            ),
-            Trip_Planner.objects.create(
-                user=users[2],
-                trip_name='Bali Getaway',
-                start_date=timezone.now().date(),
-                end_date=timezone.now().date(),
-                budget=1500.00
-            ),
-            Trip_Planner.objects.create(
-                user=users[3],
-                trip_name='NYC Experience',
-                start_date=timezone.now().date(),
-                end_date=timezone.now().date(),
-                budget=2500.00
-            ),
-            Trip_Planner.objects.create(
-                user=users[4],
-                trip_name='Peru Expedition',
-                start_date=timezone.now().date(),
-                end_date=timezone.now().date(),
-                budget=1800.00
             )
-        ]
+            trip_planners.append(planner)
 
         # Create Trip Planner Details
-        trip_planner_details = [
+        for i in range(5):
             Trip_Planner_Details.objects.create(
-                planner=trip_planners[0],
-                destination=destinations[0],
+                planner=trip_planners[i],
+                destination=destinations[i],
+                restaurant=restaurants[i],
+                hotspot=hotspots[i],
                 visit_date=timezone.now().date(),
-                notes='Visit temples in the morning'
-            ),
-            Trip_Planner_Details.objects.create(
-                planner=trip_planners[1],
-                destination=destinations[1],
-                visit_date=timezone.now().date(),
-                notes='Evening at Eiffel Tower'
-            ),
-            Trip_Planner_Details.objects.create(
-                planner=trip_planners[2],
-                destination=destinations[2],
-                visit_date=timezone.now().date(),
-                notes='Beach day and temple visit'
-            ),
-            Trip_Planner_Details.objects.create(
-                planner=trip_planners[3],
-                destination=destinations[3],
-                visit_date=timezone.now().date(),
-                notes='Central Park picnic'
-            ),
-            Trip_Planner_Details.objects.create(
-                planner=trip_planners[4],
-                destination=destinations[4],
-                visit_date=timezone.now().date(),
-                notes='Sunrise at Machu Picchu'
-            )
-        ]
-
-        self.stdout.write(self.style.SUCCESS('Successfully populated database with sample data'))
-
-    def create_hotspots(self):
-        # Create hotspots for each destination
-        for destination in Destination.objects.all():
-            # Cultural & Historical Hotspots
-            Hotspots.objects.create(
-                destination=destination,
-                locationName="Historic City Center",
-                category="Cultural & Historical",
-                timings="9:00 AM - 6:00 PM",
-                rating=4.8,
-                hidden_gem=True,
-                description="Explore the rich history and architecture of the city center with its ancient buildings and monuments.",
-                hotspot_addr="123 Main Street",
-                imageUrl="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
+                notes=f"Visit {destinations[i].name} main attractions"
             )
 
-            # Nature & Outdoor Hotspots
-            Hotspots.objects.create(
-                destination=destination,
-                locationName="Mountain View Park",
-                category="Nature & Outdoor",
-                timings="6:00 AM - 8:00 PM",
-                rating=4.9,
-                hidden_gem=False,
-                description="A beautiful park with stunning mountain views, perfect for hiking and picnics.",
-                hotspot_addr="456 Park Avenue",
-                imageUrl="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
-            )
-
-            # Food & Drink Hotspots
-            Hotspots.objects.create(
-                destination=destination,
-                locationName="Local Food Market",
-                category="Food & Drink",
-                timings="8:00 AM - 10:00 PM",
-                rating=4.7,
-                hidden_gem=True,
-                description="Experience local cuisine and fresh produce at this vibrant food market.",
-                hotspot_addr="789 Market Street",
-                imageUrl="https://images.unsplash.com/photo-1556911220-bff31c812dba?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
-            )
-
-            # Shopping & Local Goods Hotspots
-            Hotspots.objects.create(
-                destination=destination,
-                locationName="Artisan Village",
-                category="Shopping & Local Goods",
-                timings="10:00 AM - 7:00 PM",
-                rating=4.6,
-                hidden_gem=False,
-                description="Discover unique handmade crafts and local products in this charming village.",
-                hotspot_addr="321 Craft Lane",
-                imageUrl="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
-            )
-
-            # Adventure & Activities Hotspots
-            Hotspots.objects.create(
-                destination=destination,
-                locationName="Adventure Park",
-                category="Adventure & Activities",
-                timings="9:00 AM - 5:00 PM",
-                rating=4.5,
-                hidden_gem=True,
-                description="Thrilling activities and outdoor adventures for all ages.",
-                hotspot_addr="654 Adventure Road",
-                imageUrl="https://images.unsplash.com/photo-1517649763962-0c623066013b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
-            ) 
+        self.stdout.write(self.style.SUCCESS('Successfully populated database with sample data')) 

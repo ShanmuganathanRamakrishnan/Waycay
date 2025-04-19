@@ -552,7 +552,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to update nights badge
     function updateNightsBadge() {
-        nightsBadge.textContent = `${totalNights}/${maxNights}`;
+        if (nightsBadge) {
+            nightsBadge.textContent = `${totalNights}/${maxNights}`;
+        }
     }
 
     // Function to update destination view
@@ -876,4 +878,58 @@ const initializeWishlistModals = () => {
 
     // Initialize save buttons
     initializeSaveButtons();
-}; 
+};
+
+// Main JavaScript file for Waycay
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize user menu dropdown
+    const userMenu = document.querySelector('.user-menu');
+    if (userMenu) {
+        userMenu.addEventListener('click', function() {
+            const dropdown = this.querySelector('.user-dropdown');
+            dropdown.classList.toggle('show');
+        });
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!event.target.closest('.user-menu')) {
+            const dropdowns = document.querySelectorAll('.user-dropdown');
+            dropdowns.forEach(dropdown => {
+                dropdown.classList.remove('show');
+            });
+        }
+    });
+
+    // Initialize category filters
+    const filterItems = document.querySelectorAll('.filter-item');
+    filterItems.forEach(item => {
+        item.addEventListener('click', function() {
+            filterItems.forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+
+    // Initialize search functionality
+    const searchForm = document.querySelector('.search-bar form');
+    if (searchForm) {
+        searchForm.addEventListener('submit', function(e) {
+            const searchInput = this.querySelector('.search-input');
+            if (!searchInput.value.trim()) {
+                e.preventDefault();
+            }
+        });
+    }
+
+    // Mobile search functionality
+    const mobileSearch = document.querySelector('.mobile-search');
+    if (mobileSearch) {
+        mobileSearch.addEventListener('click', function() {
+            const searchInput = document.querySelector('.search-input');
+            if (searchInput) {
+                searchInput.focus();
+            }
+        });
+    }
+}); 

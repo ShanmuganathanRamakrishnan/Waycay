@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Le'bon Bakehouse - Waycay{% endblock %}
+{% block title %}{{ hotspot.locationName }} - Waycay{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
@@ -11,6 +11,8 @@
         margin: 0;
         padding: 0;
         font-family: 'Poppins', sans-serif;
+        height: 100vh;
+        overflow: hidden;
     }
 
     .header {
@@ -19,10 +21,12 @@
         padding: 1.5rem 4rem;
         border-bottom: 1px solid #E5E5E5;
         background: #fff;
-        position: relative;
+        position: fixed;
         width: 100%;
         box-sizing: border-box;
         height: 72px;
+        top: 0;
+        z-index: 1000;
     }
 
     .brand-name {
@@ -77,11 +81,17 @@
         padding: 2rem 4rem;
         display: flex;
         gap: 2rem;
+        margin-top: 72px;
+        height: calc(100vh - 72px);
+        overflow-y: auto;
     }
 
     .left-section {
         flex: 1;
         max-width: 50%;
+        position: sticky;
+        top: 0;
+        height: fit-content;
     }
 
     .right-section {
@@ -185,6 +195,227 @@
         padding: 1.5rem;
         min-height: 150px;
     }
+
+    .review-item {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid #E5E5E5;
+    }
+
+    .review-item:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+
+    .review-header {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .review-meta {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .review-user {
+        font-weight: 600;
+        color: #333;
+        font-size: 1rem;
+    }
+
+    .review-rating {
+        color: #333;
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+
+    .review-date {
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .review-comment {
+        color: #333;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    .no-reviews {
+        color: #666;
+        text-align: center;
+        padding: 2rem 0;
+    }
+
+    .write-review {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .write-review h3 {
+        font-size: 1.2rem;
+        color: #333;
+        margin-bottom: 1rem;
+    }
+
+    .review-form {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .form-group select {
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1.2rem;
+        background: white;
+        width: fit-content;
+        cursor: pointer;
+    }
+
+    .form-group textarea {
+        padding: 0.75rem;
+        border: none;
+        border-radius: 4px;
+        font-size: 1rem;
+        background: #f8f9fa;
+        resize: none;
+        min-height: 40px;
+        max-height: 200px;
+        overflow-y: auto;
+        transition: all 0.2s ease;
+        line-height: 1.5;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .form-group textarea:focus {
+        outline: none;
+        background: #f0f2f5;
+    }
+
+    .form-group textarea::placeholder {
+        color: #999;
+    }
+
+    .submit-review {
+        background: #0066FF;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        align-self: flex-start;
+        font-size: 0.9rem;
+    }
+
+    .submit-review:hover {
+        background: #0052cc;
+    }
+
+    .login-prompt {
+        text-align: center;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+    }
+
+    .login-prompt a {
+        color: #0066FF;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .login-prompt a:hover {
+        text-decoration: underline;
+    }
+
+    .star-rating {
+        display: flex;
+        gap: 0.1rem;
+        font-size: 1.5rem;
+        cursor: pointer;
+        direction: ltr;
+    }
+
+    .star {
+        color: #ddd;
+        transition: color 0.2s;
+    }
+
+    .star.active {
+        color: #333;
+    }
+
+    .star:hover,
+    .star:hover ~ .star {
+        color: #333;
+    }
+
+    .review-stars {
+        display: flex;
+        gap: 0.1rem;
+        font-size: 1rem;
+    }
+
+    .review-stars .star {
+        color: #333;
+    }
+
+    .reviews-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .write-review-btn {
+        background: none;
+        border: none;
+        color: #0066FF;
+        cursor: pointer;
+        padding: 0.5rem;
+        font-size: 1.2rem;
+        transition: transform 0.2s;
+    }
+
+    .write-review-btn:hover {
+        transform: scale(1.1);
+    }
+
+    .write-review {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 </style>
 {% endblock %}
 
@@ -202,13 +433,22 @@
             <div class="menu-divider"></div>
             <i class="fas fa-user"></i>
             <div class="user-dropdown">
-                <div class="dropdown-section">
-                    <a href="{% url 'register' %}" class="dropdown-item emphasized">Sign up</a>
-                    <a href="{% url 'login' %}" class="dropdown-item">Log in</a>
-                </div>
-                <div class="dropdown-section">
-                    <a href="#" class="dropdown-item">Help Centre</a>
-                </div>
+                {% if user.is_authenticated %}
+                    <div class="dropdown-section">
+                        <span class="dropdown-item">Welcome, {{ user.username }}</span>
+                    </div>
+                    <div class="dropdown-section">
+                        <a href="{% url 'logout' %}" class="dropdown-item">Sign Out</a>
+                    </div>
+                {% else %}
+                    <div class="dropdown-section">
+                        <a href="{% url 'register' %}" class="dropdown-item emphasized">Sign up</a>
+                        <a href="{% url 'login' %}" class="dropdown-item">Log in</a>
+                    </div>
+                    <div class="dropdown-section">
+                        <a href="#" class="dropdown-item">Help Centre</a>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -216,23 +456,18 @@
 
 <main class="main-content">
     <div class="left-section">
-        <img src="{% static 'core/images/desc_main.jpg' %}" alt="Le'bon Bakehouse Main" class="main-image">
+        {% if hotspot.imageUrl %}
+            <img src="{% static 'core/images/'|add:hotspot.imageUrl %}" alt="{{ hotspot.locationName }}" class="main-image">
+        {% else %}
+            <div class="main-image placeholder-image">
+                <i class="fas fa-map-marker-alt"></i>
+            </div>
+        {% endif %}
     </div>
 
     <div class="right-section">
-        <h1 class="title">Le'bon Bakehouse</h1>
-        <div class="location">Chicago,United States of america</div>
-
-        <div class="image-gallery">
-            <img src="https://images.unsplash.com/photo-1517433670267-08bbd4be890f?w=500&q=80" alt="Bakery Exterior"
-                class="gallery-image">
-            <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=500&q=80" alt="Bakery Interior"
-                class="gallery-image">
-            <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500&q=80" alt="Bakery Products"
-                class="gallery-image">
-            <img src="https://images.unsplash.com/photo-1556191041-c62eaad8b6c9?w=500&q=80" alt="Baker at Work"
-                class="gallery-image">
-        </div>
+        <h1 class="title">{{ hotspot.locationName }}</h1>
+        <div class="location">{{ hotspot.destination.name }}, {{ hotspot.destination.location }}</div>
 
         <div class="tabs">
             <a href="#overview" class="tab active">Overview</a>
@@ -243,27 +478,150 @@
         <section class="overview-section">
             <h2 class="section-title">Overview</h2>
             <p class="overview-text">
-                Bakehouse is a quaint, mountain bakery located in Landour, Mussoorie, known for its unique handmade
-                cakes, pastries, and sandwiches,some of which are from recipes dating back to the late 1890s. The
-                bakery offers a wide variety of baked items, including fresh breads, cakes, pastries, muffins,
-                tarts, and assorted cookies, reflecting the authentic culinary tradition of Landour.<br><br>
-                52 It is housed in an old-fashioned, charming mountain-style building that replicates a typical
-                19th-century kitchen
+                {{ hotspot.description }}
             </p>
         </section>
 
         <h2 class="section-title">Details</h2>
         <div class="details-tags">
-            <span class="tag">Trending</span>
-            <span class="tag">Price range : $$$</span>
-            <span class="tag">Pets Allowed</span>
-            <span class="tag">Lake Nearby</span>
+            <span class="tag">{{ hotspot.category }}</span>
+            {% if hotspot.hidden_gem %}
+                <span class="tag">Hidden Gem</span>
+            {% endif %}
+            <span class="tag">Average Rating: {{ avg_rating|default:"No ratings yet" }}/5</span>
+            <span class="tag">Timings: {{ hotspot.timings }}</span>
         </div>
 
         <section class="reviews-section">
-            <h2 class="section-title">Reviews</h2>
-            <!-- Reviews content will go here -->
+            <div class="reviews-header">
+                <h2 class="section-title">User Reviews</h2>
+                {% if user.is_authenticated %}
+                <button class="write-review-btn" onclick="toggleReviewForm()">
+                    <i class="fas fa-pen"></i>
+                </button>
+                {% else %}
+                <div class="login-prompt">
+                    <p>Please <a href="{% url 'login' %}">login</a> to write a review.</p>
+                </div>
+                {% endif %}
+            </div>
+
+            {% if user.is_authenticated %}
+            <div class="write-review" id="reviewForm" style="display: none;">
+                <form method="post" action="{% url 'add_review' hotspot.hotspot_id %}" class="review-form">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <textarea name="comment" id="comment" rows="3" required placeholder="Write your review..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <div class="star-rating">
+                            <input type="hidden" name="rating" id="rating" value="5" required>
+                            <span class="star" data-value="1">★</span>
+                            <span class="star" data-value="2">★</span>
+                            <span class="star" data-value="3">★</span>
+                            <span class="star" data-value="4">★</span>
+                            <span class="star" data-value="5">★</span>
+                        </div>
+                    </div>
+                    <button type="submit" class="submit-review">Submit</button>
+                </form>
+            </div>
+            {% endif %}
+
+            {% if reviews %}
+                {% for review in reviews %}
+                    <div class="review-item">
+                        <div class="review-header">
+                            <span class="review-user">{{ review.user.username }}</span>
+                            <div class="review-meta">
+                                <span class="review-rating">{{ review.rating }}/5</span>
+                                <span class="review-date">{{ review.date }}</span>
+                            </div>
+                        </div>
+                        <p class="review-comment">{{ review.comments }}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="no-reviews">No reviews yet. Be the first to review!</p>
+            {% endif %}
         </section>
     </div>
 </main>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const stars = document.querySelectorAll('.star-rating .star');
+    const ratingInput = document.getElementById('rating');
+    
+    // Set initial state (5 stars)
+    stars.forEach(s => {
+        if (parseInt(s.getAttribute('data-value')) <= 5) {
+            s.classList.add('active');
+        }
+    });
+    
+    stars.forEach(star => {
+        star.addEventListener('click', function() {
+            const value = parseInt(this.getAttribute('data-value'));
+            ratingInput.value = value;
+            
+            // Update star colors
+            stars.forEach(s => {
+                const starValue = parseInt(s.getAttribute('data-value'));
+                if (starValue <= value) {
+                    s.classList.add('active');
+                } else {
+                    s.classList.remove('active');
+                }
+            });
+        });
+        
+        // Add hover effect
+        star.addEventListener('mouseover', function() {
+            const value = parseInt(this.getAttribute('data-value'));
+            stars.forEach(s => {
+                const starValue = parseInt(s.getAttribute('data-value'));
+                if (starValue <= value) {
+                    s.style.color = '#333';
+                } else {
+                    s.style.color = '#ddd';
+                }
+            });
+        });
+        
+        // Reset colors on mouseout
+        star.addEventListener('mouseout', function() {
+            const currentValue = parseInt(ratingInput.value);
+            stars.forEach(s => {
+                const starValue = parseInt(s.getAttribute('data-value'));
+                if (starValue <= currentValue) {
+                    s.style.color = '#333';
+                } else {
+                    s.style.color = '#ddd';
+                }
+            });
+        });
+    });
+
+    // Auto-resize textarea
+    const textarea = document.querySelector('.form-group textarea');
+    if (textarea) {
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+    }
+});
+
+function toggleReviewForm() {
+    const form = document.getElementById('reviewForm');
+    if (form.style.display === 'none') {
+        form.style.display = 'block';
+    } else {
+        form.style.display = 'none';
+    }
+}
+</script>
 {% endblock %} 
