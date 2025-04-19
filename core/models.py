@@ -41,6 +41,8 @@ class Restaurant(models.Model):
     price_range = models.CharField(max_length=20, blank=True, null=True)
     timings = models.CharField(max_length=20, blank=True, null=True)
     res_type = models.CharField(max_length=30, blank=True, null=True)
+    description = models.CharField(max_length=400, blank=True, null=True)
+    imageUrl = models.CharField(max_length=500, blank=True, null=True)
 
     def __str__(self):
         return self.res_name

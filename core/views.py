@@ -207,3 +207,61 @@ def add_review(request, hotspot_id):
         return redirect('hotspot_detail', hotspot_id=hotspot_id)
     
     return redirect('hotspot_detail', hotspot_id=hotspot_id)
+
+def restaurants(request):
+    """
+    View function for displaying the restaurants page.
+    """
+    # Get all restaurants
+    restaurants_list = Restaurant.objects.all()
+    
+    # Pagination
+    paginator = Paginator(restaurants_list, 9)  # Show 9 restaurants per page
+    page = request.GET.get('page')
+    restaurants = paginator.get_page(page)
+    
+    context = {
+        'restaurants': restaurants,
+    }
+    return render(request, 'restaurants.html', context)
+
+def restaurant_detail(request, restaurant_id):
+    """
+    View function for displaying restaurant details.
+    """
+    restaurant = Restaurant.objects.get(pk=restaurant_id)
+    reviews = Review.objects.filter(restaurant=restaurant).order_by('-date')
+    
+    # Calculate average rating
+    avg_rating = reviews.aggregate(Avg('rating'))['rating__avg']
+    if avg_rating is not None:
+        avg_rating = round(avg_rating, 1)
+    
+    context = {
+        'restaurant': restaurant,
+        'reviews': reviews,
+        'avg_rating': avg_rating,
+    }
+    return render(request, 'restaurant_detail.html', context)
+
+@login_required
+def add_restaurant_review(request, restaurant_id):
+    """Handle restaurant review submission"""
+    if request.method == 'POST':
+        restaurant = Restaurant.objects.get(pk=restaurant_id)
+        rating = request.POST.get('rating')
+        comment = request.POST.get('comment')
+        
+        # Create the review
+        Review.objects.create(
+            user=request.user,
+            restaurant=restaurant,
+            rating=rating,
+            comments=comment,
+            date=timezone.now().date()
+        )
+        
+        messages.success(request, 'Your review has been submitted successfully!')
+        return redirect('restaurant_detail', restaurant_id=restaurant_id)
+    
+    return redirect('restaurant_detail', restaurant_id=restaurant_id)

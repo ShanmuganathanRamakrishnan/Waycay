@@ -33,5 +33,7 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('hotspot/<int:hotspot_id>/', views.hotspot_detail, name='hotspot_detail'),
     path('add-review/<int:hotspot_id>/', views.add_review, name='add_review'),
+    path('restaurant/<int:restaurant_id>/', views.restaurant_detail, name='restaurant_detail'),
+    path('add-restaurant-review/<int:restaurant_id>/', views.add_restaurant_review, name='add_restaurant_review'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
