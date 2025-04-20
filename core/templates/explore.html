@@ -1,13 +1,158 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Explore - Waycay{% endblock %}
+{% block title %}Waycay - Explore Amazing Destinations{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'core/css/explore.css' %}">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+<style>
+    .like-button {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        z-index: 10;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+        border: none;
+    }
+
+    .like-button i {
+        font-size: 16px;
+        color: #484848;
+        transition: all 0.2s ease;
+    }
+
+    .like-button.liked i {
+        color: #ff385c;
+    }
+
+    .like-button:hover {
+        transform: scale(1.1);
+    }
+
+    @keyframes likeAnimation {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.3); }
+        100% { transform: scale(1); }
+    }
+
+    .like-animation i {
+        animation: likeAnimation 0.3s ease-in-out;
+    }
+
+    .rating {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .rating span {
+        font-weight: 600;
+        color: #222;
+    }
+
+    .rating i {
+        color: #ff385c;
+    }
+
+    .category-filters {
+        padding: 1rem 0;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .filter-container {
+        display: flex;
+        gap: 1rem;
+        overflow-x: auto;
+        padding: 0 1rem;
+    }
+
+    .filter-button {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border: 1px solid #e0e0e0;
+        border-radius: 2rem;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all 0.2s ease;
+    }
+
+    .filter-button:hover {
+        border-color: #222;
+    }
+
+    .filter-button.active {
+        background-color: #222;
+        color: white;
+        border-color: #222;
+    }
+
+    .filter-button i {
+        font-size: 1rem;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background-color: white;
+        min-width: 200px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+        z-index: 100;
+    }
+
+    .filter-button:hover .dropdown-content {
+        display: block;
+    }
+
+    .dropdown-content a {
+        display: block;
+        padding: 0.5rem 1rem;
+        color: #222;
+        text-decoration: none;
+        transition: background-color 0.2s ease;
+    }
+
+    .dropdown-content a:hover {
+        background-color: #f5f5f5;
+    }
+
+    .welcome-message {
+        color: #222;
+        font-weight: 600;
+        padding: 12px 16px;
+        border-bottom: 1px solid #ebebeb;
+        margin-bottom: 8px;
+    }
+
+    .dropdown-item.emphasized {
+        color: #ff385c;
+        font-weight: 600;
+    }
+
+    .dropdown-item.emphasized:hover {
+        background-color: #fff1f2;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
+<!-- Hidden CSRF token for like functionality -->
+<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
 <!-- Header -->
 <header class="header">
     <div class="header-container">
@@ -17,18 +162,17 @@
 
         <!-- Search Bar - Desktop -->
         <div class="search-bar">
-            <form method="GET" action="{% url 'explore' %}">
-                <div class="search-item">
-                    <input type="text" class="search-input" name="q" placeholder="Search Destinations" value="{{ query }}">
-                </div>
-                <button type="submit" class="search-button">
-                    <i class="fas fa-search"></i>
-                </button>
-            </form>
+            <div class="search-item">
+                <input type="text" class="search-input" placeholder="Search Destinations">
+            </div>
+            <button class="search-button">
+                <i class="fas fa-search"></i>
+            </button>
         </div>
 
+        <!-- User Actions -->
         <div class="user-actions">
-            <a href="{% url 'planner' %}" class="btn btn-primary">Plan a trip</a>
+            <a href="{% url 'planner' %}" class="plan-trip">Plan a trip</a>
             <div class="user-menu">
                 <i class="fas fa-bars"></i>
                 <div class="menu-divider"></div>
@@ -36,10 +180,13 @@
                 <div class="user-dropdown">
                     {% if user.is_authenticated %}
                         <div class="dropdown-section">
-                            <span class="dropdown-item">Welcome, {{ user.username }}</span>
+                            <div class="dropdown-item welcome-message">
+                                Welcome, {{ user.username }}!
+                            </div>
+                            <a href="{% url 'logout' %}" class="dropdown-item emphasized">Sign out</a>
                         </div>
                         <div class="dropdown-section">
-                            <a href="{% url 'logout' %}" class="dropdown-item">Sign Out</a>
+                            <a href="#" class="dropdown-item">Help Centre</a>
                         </div>
                     {% else %}
                         <div class="dropdown-section">
@@ -69,195 +216,68 @@
 <!-- Category Filters -->
 <div class="category-filters">
     <div class="filter-container">
-        <div class="filter-item active">
-            <div class="filter-icon">🏛️</div>
+        <button type="button" class="filter-button" data-category="cultural">
+            <i class="fas fa-landmark"></i>
             <span>Cultural & Historical</span>
-            <div class="dropdown-content">
-                <a href="#">Historical Landmarks</a>
-                <a href="#">Museums & Art Galleries</a>
-                <a href="#">Monuments & Statues</a>
-                <a href="#">Religious Sites</a>
-                <a href="#">Heritage Sites</a>
-            </div>
-        </div>
-        <div class="filter-item">
-            <div class="filter-icon">🍽️</div>
+        </button>
+        <button type="button" class="filter-button" data-category="food">
+            <i class="fas fa-utensils"></i>
             <span>Food & Drink</span>
-            <div class="dropdown-content">
-                <a href="#">Restaurants</a>
-                <a href="#">Street Food Spots</a>
-                <a href="#">Local Markets</a>
-                <a href="#">Cafés & Bakeries</a>
-            </div>
-        </div>
-        <div class="filter-item">
-            <div class="filter-icon">🌿</div>
+        </button>
+        <button type="button" class="filter-button" data-category="nature">
+            <i class="fas fa-leaf"></i>
             <span>Nature & Outdoor</span>
-            <div class="dropdown-content">
-                <a href="#">Parks & Gardens</a>
-                <a href="#">Lakes & Waterfalls</a>
-                <a href="#">Hiking Trails</a>
-                <a href="#">Beaches</a>
-                <a href="#">Mountains & Valleys</a>
-                <a href="#">National Parks</a>
-            </div>
-        </div>
-        <div class="filter-item">
-            <div class="filter-icon">🛍️</div>
-            <span>Shopping & Local Goods</span>
-            <div class="dropdown-content">
-                <a href="#">Shopping Malls</a>
-                <a href="#">Local Bazaars</a>
-                <a href="#">Souvenir Shops</a>
-                <a href="#">Artisanal Villages</a>
-            </div>
-        </div>
-        <div class="filter-item">
-            <div class="filter-icon">🏃</div>
-            <span>Adventure & Activities</span>
-            <div class="dropdown-content">
-                <a href="#">Theme Parks</a>
-                <a href="#">Adventure Sports</a>
-                <a href="#">Water Sports</a>
-                <a href="#">Trekking</a>
-                <a href="#">Skiing</a>
-            </div>
-        </div>
-        <div class="filter-item">
-            <div class="filter-icon">🎭</div>
-            <span>Entertainment & Events</span>
-            <div class="dropdown-content">
-                <a href="#">Live Shows</a>
-                <a href="#">Music Festivals</a>
-                <a href="#">Local Events</a>
-                <a href="#">Sports Arenas</a>
-            </div>
-        </div>
-        <div class="filter-item">
-            <div class="filter-icon">🧘</div>
-            <span>Relaxation & Wellness</span>
-            <div class="dropdown-content">
-                <a href="#">Spas & Retreats</a>
-                <a href="#">Yoga Centers</a>
-                <a href="#">Thermal Springs</a>
-                <a href="#">Resorts</a>
-            </div>
-        </div>
+        </button>
+        <button type="button" class="filter-button" data-category="shopping">
+            <i class="fas fa-shopping-bag"></i>
+            <span>Shopping</span>
+        </button>
+        <button type="button" class="filter-button" data-category="adventure">
+            <i class="fas fa-running"></i>
+            <span>Adventure</span>
+        </button>
     </div>
-    <button class="filters-button">
-        <i class="fas fa-sliders-h"></i>
-        <span>Filters</span>
-    </button>
 </div>
 
-<!-- Main Content -->
+<!-- Property Listings -->
 <main class="listings">
-    {% if no_results %}
-    <div class="no-results">
-        <i class="fas fa-search"></i>
-        <h3>No results found</h3>
-        <p>Try adjusting your search or filters</p>
-    </div>
-    {% else %}
-    <div class="listings-grid" id="propertyGrid">
-        {% for hotspot in hotspots %}
-        <div class="property-card">
-            <a href="{% url 'hotspot_detail' hotspot_id=hotspot.hotspot_id %}" class="property-link">
-                {% if hotspot.imageUrl %}
-                <img src="{{ hotspot.imageUrl }}" alt="{{ hotspot.locationName }}" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'placeholder-image\'><i class=\'fas fa-map-marker-alt\'></i></div>';">
-                {% else %}
-                <div class="placeholder-image">
-                    <i class="fas fa-map-marker-alt"></i>
-                </div>
+    <div class="listings-grid">
+        {% for item in items %}
+        <div class="property-card" 
+             data-type="{{ item.type }}" 
+             data-id="{{ item.id }}"
+             data-category="{{ item.region_type|lower }}">
+            <div class="property-image-container">
+                <img src="{% static item.image_url %}" alt="{{ item.name }}" class="property-image">
+                {% if item.region_type %}
+                <div class="property-tag">{{ item.region_type }}</div>
                 {% endif %}
-                <div class="property-info">
-                    <h3 class="hotspot-name">{{ hotspot.locationName }}</h3>
-                    <p class="location">{{ hotspot.destination.name }}, {{ hotspot.destination.location }}</p>
-                    {% if hotspot.description %}
-                    <p class="description">{{ hotspot.description|truncatewords:20 }}</p>
-                    {% endif %}
-                    <div class="property-rating">
-                        <span class="rating">
-                            <i class="fas fa-star"></i>
-                            {{ hotspot.rating }}
-                        </span>
-                        <span class="category">{{ hotspot.category }}</span>
+                <div class="like-button {% if item.is_liked %}liked{% endif %}" 
+                     data-id="{{ item.id }}" 
+                     data-type="{{ item.type }}">
+                    <i class="{% if item.is_liked %}fas{% else %}far{% endif %} fa-heart"></i>
+                </div>
+            </div>
+            <div class="property-details">
+                <div class="property-location-rating">
+                    <h3>{{ item.name }}</h3>
+                    <div class="rating">
+                        <span>{{ item.rating|floatformat:1 }}</span>
+                        <i class="fas fa-star"></i>
                     </div>
                 </div>
-            </a>
+                <p class="property-distance">
+                    <i class="fas fa-map-marker-alt"></i>
+                    {{ item.location }}
+                </p>
+                <p class="property-info">{{ item.description|truncatechars:100 }}</p>
+            </div>
+        </div>
+        {% empty %}
+        <div class="no-results">
+            <p>No items found for the selected category.</p>
         </div>
         {% endfor %}
-    </div>
-    {% endif %}
-
-    <!-- Hotspots Section -->
-    <div class="hotspots-section">
-        <h2 class="section-title">Popular Hotspots</h2>
-        <div class="hotspots-grid">
-            {% for hotspot in hotspots %}
-            <div class="hotspot-card">
-                <div class="hotspot-image">
-                    {% if hotspot.imageUrl %}
-                    <img src="{{ hotspot.imageUrl }}" alt="{{ hotspot.locationName }}" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'placeholder-image\'><i class=\'fas fa-map-marker-alt\'></i></div>';">
-                    {% else %}
-                    <div class="placeholder-image">
-                        <i class="fas fa-map-marker-alt"></i>
-                    </div>
-                    {% endif %}
-                    {% if hotspot.hidden_gem %}
-                    <span class="hidden-gem-badge">Hidden Gem</span>
-                    {% endif %}
-                </div>
-                <div class="hotspot-info">
-                    <h3>{{ hotspot.locationName }}</h3>
-                    <p class="hotspot-location">{{ hotspot.destination.name }}, {{ hotspot.destination.location }}</p>
-                    <div class="hotspot-details">
-                        <span class="category">{{ hotspot.category }}</span>
-                        <span class="rating">
-                            <i class="fas fa-star"></i>
-                            {{ hotspot.rating }}
-                        </span>
-                    </div>
-                    <p class="description">{{ hotspot.description|truncatewords:20 }}</p>
-                    <div class="hotspot-timings">
-                        <i class="fas fa-clock"></i>
-                        <span>{{ hotspot.timings }}</span>
-                    </div>
-                </div>
-            </div>
-            {% empty %}
-            <div class="no-hotspots">
-                <i class="fas fa-map-marked-alt"></i>
-                <h3>No hotspots found</h3>
-                <p>Try adjusting your search or filters</p>
-            </div>
-            {% endfor %}
-        </div>
-
-        <!-- Pagination -->
-        {% if hotspots.paginator.num_pages > 1 %}
-        <div class="pagination">
-            {% if hotspots.has_previous %}
-                <a href="?page=1{% if query %}&q={{ query }}{% endif %}">&laquo; First</a>
-                <a href="?page={{ hotspots.previous_page_number }}{% if query %}&q={{ query }}{% endif %}">Previous</a>
-            {% else %}
-                <span class="disabled">&laquo; First</span>
-                <span class="disabled">Previous</span>
-            {% endif %}
-
-            <span class="current">
-                Page {{ hotspots.number }} of {{ hotspots.paginator.num_pages }}
-            </span>
-
-            {% if hotspots.has_next %}
-                <a href="?page={{ hotspots.next_page_number }}{% if query %}&q={{ query }}{% endif %}">Next</a>
-                <a href="?page={{ hotspots.paginator.num_pages }}{% if query %}&q={{ query }}{% endif %}">Last &raquo;</a>
-            {% else %}
-                <span class="disabled">Next</span>
-                <span class="disabled">Last &raquo;</span>
-            {% endif %}
-        </div>
-        {% endif %}
     </div>
 </main>
 
@@ -269,5 +289,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'core/js/main.js' %}"></script>
-{% endblock %} 
+<script src="{% static 'core/js/explore.js' %}"></script>
+{% endblock %}
