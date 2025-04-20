@@ -83,22 +83,26 @@
         padding: 2rem 4rem;
         display: flex;
         gap: 2rem;
-        margin-top: 72px;
-        height: calc(100vh - 72px);
+        margin-top: 56px;
+        height: calc(100vh - 56px);
         overflow-y: auto;
+        box-sizing: border-box;
+        width: 100%;
+        max-width: 100%;
     }
 
     .left-section {
         flex: 1;
         max-width: 50%;
         position: sticky;
-        top: 0;
+        top: 2rem;
         height: fit-content;
     }
 
     .right-section {
         flex: 1;
         padding-left: 2rem;
+        max-width: 50%;
     }
 
     .main-image {
