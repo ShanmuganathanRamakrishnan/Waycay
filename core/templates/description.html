@@ -100,30 +100,71 @@
     .main-content {
         padding: 2rem 4rem;
         display: flex;
-        gap: 2rem;
+        gap: 3rem;
         margin-top: 72px;
         height: calc(100vh - 72px);
-        overflow-y: auto;
+        overflow: hidden;
     }
 
     .left-section {
-        flex: 1;
-        max-width: 50%;
+        flex: 0 0 65%;
         position: sticky;
-        top: 0;
+        top: 2rem;
         height: fit-content;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+        min-height: 500px;
     }
 
     .right-section {
         flex: 1;
-        padding-left: 2rem;
+        max-width: 35%;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .right-section-top {
+        flex: 0 0 auto;
+        margin-bottom: 2rem;
     }
 
     .main-image {
         width: 100%;
-        height: auto;
+        height: 100%;
+        min-height: 500px;
+        aspect-ratio: 16/10;
         border-radius: 12px;
-        margin-bottom: 2rem;
+        object-fit: cover;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .placeholder-image {
+        width: 100%;
+        height: 100%;
+        min-height: 500px;
+        aspect-ratio: 16/10;
+        border-radius: 12px;
+        background-color: #f5f5f5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 48px;
+        color: #ddd;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .image-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        border-radius: 12px;
     }
 
     .title {
@@ -209,11 +250,37 @@
     }
 
     .reviews-section {
+        flex: 1;
+        overflow-y: auto;
         background: white;
         border: 1px solid #E5E5E5;
         border-radius: 12px;
         padding: 1.5rem;
-        min-height: 150px;
+        margin-bottom: 0;
+    }
+
+    .reviews-container {
+        height: 100%;
+        overflow-y: auto;
+        padding-right: 1rem;
+    }
+
+    .reviews-container::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .reviews-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+    }
+
+    .reviews-container::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 3px;
+    }
+
+    .reviews-container::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
     }
 
     .review-item {
@@ -383,7 +450,7 @@
     }
 
     .star:hover,
-    .star:hover ~ .star {
+    .star:hover~.star {
         color: #333;
     }
 
@@ -431,6 +498,7 @@
             opacity: 0;
             transform: translateY(-10px);
         }
+
         to {
             opacity: 1;
             transform: translateY(0);
@@ -449,20 +517,20 @@
             <i class="fas fa-user"></i>
             <div class="user-dropdown">
                 {% if user.is_authenticated %}
-                    <div class="dropdown-section">
-                        <span class="dropdown-item">Welcome, {{ user.username }}</span>
-                    </div>
-                    <div class="dropdown-section">
-                        <a href="{% url 'logout' %}" class="dropdown-item">Sign Out</a>
-                    </div>
+                <div class="dropdown-section">
+                    <span class="dropdown-item">Welcome, {{ user.username }}</span>
+                </div>
+                <div class="dropdown-section">
+                    <a href="{% url 'logout' %}" class="dropdown-item">Sign Out</a>
+                </div>
                 {% else %}
-                    <div class="dropdown-section">
-                        <a href="{% url 'register' %}" class="dropdown-item emphasized">Sign up</a>
-                        <a href="{% url 'login' %}" class="dropdown-item">Log in</a>
-                    </div>
-                    <div class="dropdown-section">
-                        <a href="#" class="dropdown-item">Help Centre</a>
-                    </div>
+                <div class="dropdown-section">
+                    <a href="{% url 'register' %}" class="dropdown-item emphasized">Sign up</a>
+                    <a href="{% url 'login' %}" class="dropdown-item">Log in</a>
+                </div>
+                <div class="dropdown-section">
+                    <a href="#" class="dropdown-item">Help Centre</a>
+                </div>
                 {% endif %}
             </div>
         </div>
@@ -472,39 +540,46 @@
 <main class="main-content">
     <div class="left-section">
         {% if hotspot.imageUrl %}
-            <img src="{% static 'core/images/'|add:hotspot.imageUrl %}" alt="{{ hotspot.locationName }}" class="main-image">
+        <div class="image-container">
+            <img src="{% static 'core/images/'|add:hotspot.imageUrl %}" alt="{{ hotspot.locationName }}"
+                class="main-image">
+        </div>
         {% else %}
-            <div class="main-image placeholder-image">
+        <div class="image-container">
+            <div class="placeholder-image">
                 <i class="fas fa-map-marker-alt"></i>
             </div>
+        </div>
         {% endif %}
     </div>
 
     <div class="right-section">
-        <h1 class="title">{{ hotspot.locationName }}</h1>
-        <div class="location">{{ hotspot.destination.name }}, {{ hotspot.destination.location }}</div>
+        <div class="right-section-top">
+            <h1 class="title">{{ hotspot.locationName }}</h1>
+            <div class="location">{{ hotspot.destination.name }}, {{ hotspot.destination.location }}</div>
 
-        <div class="tabs">
-            <a href="#overview" class="tab active">Overview</a>
-            <a href="#location" class="tab">Location</a>
-            <a href="#contact" class="tab">Contact</a>
-        </div>
+            <div class="tabs">
+                <a href="#overview" class="tab active">Overview</a>
+                <a href="#location" class="tab">Location</a>
+                <a href="#contact" class="tab">Contact</a>
+            </div>
 
-        <section class="overview-section">
-            <h2 class="section-title">Overview</h2>
-            <p class="overview-text">
-                {{ hotspot.description }}
-            </p>
-        </section>
+            <section class="overview-section">
+                <h2 class="section-title">Overview</h2>
+                <p class="overview-text">
+                    {{ hotspot.description }}
+                </p>
+            </section>
 
-        <h2 class="section-title">Details</h2>
-        <div class="details-tags">
-            <span class="tag">{{ hotspot.category }}</span>
-            {% if hotspot.hidden_gem %}
+            <h2 class="section-title">Details</h2>
+            <div class="details-tags">
+                <span class="tag">{{ hotspot.category }}</span>
+                {% if hotspot.hidden_gem %}
                 <span class="tag">Hidden Gem</span>
-            {% endif %}
-            <span class="tag">Average Rating: {{ avg_rating|default:"No ratings yet" }}/5</span>
-            <span class="tag">Timings: {{ hotspot.timings }}</span>
+                {% endif %}
+                <span class="tag">Average Rating: {{ avg_rating|default:"No ratings yet" }}/5</span>
+                <span class="tag">Timings: {{ hotspot.timings }}</span>
+            </div>
         </div>
 
         <section class="reviews-section">
@@ -514,10 +589,6 @@
                 <button class="write-review-btn" onclick="toggleReviewForm()">
                     <i class="fas fa-pen"></i>
                 </button>
-                {% else %}
-                <div class="login-prompt">
-                    <p>Please <a href="{% url 'login' %}">login</a> to write a review.</p>
-                </div>
                 {% endif %}
             </div>
 
@@ -526,7 +597,8 @@
                 <form method="post" action="{% url 'add_review' hotspot.hotspot_id %}" class="review-form">
                     {% csrf_token %}
                     <div class="form-group">
-                        <textarea name="comment" id="comment" rows="3" required placeholder="Write your review..."></textarea>
+                        <textarea name="comment" id="comment" rows="3" required
+                            placeholder="Write your review..."></textarea>
                     </div>
                     <div class="form-group">
                         <div class="star-rating">
@@ -541,24 +613,30 @@
                     <button type="submit" class="submit-review">Submit</button>
                 </form>
             </div>
+            {% else %}
+            <div class="login-prompt">
+                <p>Please <a href="{% url 'login' %}">login</a> to write a review.</p>
+            </div>
             {% endif %}
 
-            {% if reviews %}
+            <div class="reviews-container">
+                {% if reviews %}
                 {% for review in reviews %}
-                    <div class="review-item">
-                        <div class="review-header">
-                            <span class="review-user">{{ review.user.username }}</span>
-                            <div class="review-meta">
-                                <span class="review-rating">{{ review.rating }}/5</span>
-                                <span class="review-date">{{ review.date }}</span>
-                            </div>
+                <div class="review-item">
+                    <div class="review-header">
+                        <span class="review-user">{{ review.user.username }}</span>
+                        <div class="review-meta">
+                            <span class="review-rating">{{ review.rating }}/5</span>
+                            <span class="review-date">{{ review.date }}</span>
                         </div>
-                        <p class="review-comment">{{ review.comments }}</p>
                     </div>
+                    <p class="review-comment">{{ review.comments }}</p>
+                </div>
                 {% endfor %}
-            {% else %}
+                {% else %}
                 <p class="no-reviews">No reviews yet. Be the first to review!</p>
-            {% endif %}
+                {% endif %}
+            </div>
         </section>
     </div>
 </main>
@@ -566,77 +644,77 @@
 
 {% block extra_js %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const stars = document.querySelectorAll('.star-rating .star');
-    const ratingInput = document.getElementById('rating');
-    
-    // Set initial state (5 stars)
-    stars.forEach(s => {
-        if (parseInt(s.getAttribute('data-value')) <= 5) {
-            s.classList.add('active');
+    document.addEventListener('DOMContentLoaded', function () {
+        const stars = document.querySelectorAll('.star-rating .star');
+        const ratingInput = document.getElementById('rating');
+
+        // Set initial state (5 stars)
+        stars.forEach(s => {
+            if (parseInt(s.getAttribute('data-value')) <= 5) {
+                s.classList.add('active');
+            }
+        });
+
+        stars.forEach(star => {
+            star.addEventListener('click', function () {
+                const value = parseInt(this.getAttribute('data-value'));
+                ratingInput.value = value;
+
+                // Update star colors
+                stars.forEach(s => {
+                    const starValue = parseInt(s.getAttribute('data-value'));
+                    if (starValue <= value) {
+                        s.classList.add('active');
+                    } else {
+                        s.classList.remove('active');
+                    }
+                });
+            });
+
+            // Add hover effect
+            star.addEventListener('mouseover', function () {
+                const value = parseInt(this.getAttribute('data-value'));
+                stars.forEach(s => {
+                    const starValue = parseInt(s.getAttribute('data-value'));
+                    if (starValue <= value) {
+                        s.style.color = '#333';
+                    } else {
+                        s.style.color = '#ddd';
+                    }
+                });
+            });
+
+            // Reset colors on mouseout
+            star.addEventListener('mouseout', function () {
+                const currentValue = parseInt(ratingInput.value);
+                stars.forEach(s => {
+                    const starValue = parseInt(s.getAttribute('data-value'));
+                    if (starValue <= currentValue) {
+                        s.style.color = '#333';
+                    } else {
+                        s.style.color = '#ddd';
+                    }
+                });
+            });
+        });
+
+        // Auto-resize textarea
+        const textarea = document.querySelector('.form-group textarea');
+        if (textarea) {
+            textarea.addEventListener('input', function () {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
         }
     });
-    
-    stars.forEach(star => {
-        star.addEventListener('click', function() {
-            const value = parseInt(this.getAttribute('data-value'));
-            ratingInput.value = value;
-            
-            // Update star colors
-            stars.forEach(s => {
-                const starValue = parseInt(s.getAttribute('data-value'));
-                if (starValue <= value) {
-                    s.classList.add('active');
-                } else {
-                    s.classList.remove('active');
-                }
-            });
-        });
-        
-        // Add hover effect
-        star.addEventListener('mouseover', function() {
-            const value = parseInt(this.getAttribute('data-value'));
-            stars.forEach(s => {
-                const starValue = parseInt(s.getAttribute('data-value'));
-                if (starValue <= value) {
-                    s.style.color = '#333';
-                } else {
-                    s.style.color = '#ddd';
-                }
-            });
-        });
-        
-        // Reset colors on mouseout
-        star.addEventListener('mouseout', function() {
-            const currentValue = parseInt(ratingInput.value);
-            stars.forEach(s => {
-                const starValue = parseInt(s.getAttribute('data-value'));
-                if (starValue <= currentValue) {
-                    s.style.color = '#333';
-                } else {
-                    s.style.color = '#ddd';
-                }
-            });
-        });
-    });
 
-    // Auto-resize textarea
-    const textarea = document.querySelector('.form-group textarea');
-    if (textarea) {
-        textarea.addEventListener('input', function() {
-            this.style.height = 'auto';
-            this.style.height = (this.scrollHeight) + 'px';
-        });
+    function toggleReviewForm() {
+        const form = document.getElementById('reviewForm');
+        if (form.style.display === 'none') {
+            form.style.display = 'block';
+        } else {
+            form.style.display = 'none';
+        }
     }
-});
-
-function toggleReviewForm() {
-    const form = document.getElementById('reviewForm');
-    if (form.style.display === 'none') {
-        form.style.display = 'block';
-    } else {
-        form.style.display = 'none';
-    }
-}
 </script>
-{% endblock %} 
+{% endblock %}
