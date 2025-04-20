@@ -17,6 +17,7 @@
 
     .header {
         display: flex;
+        justify-content: space-between;
         align-items: center;
         padding: 1.5rem 4rem;
         border-bottom: 1px solid #E5E5E5;
@@ -32,13 +33,32 @@
     .brand-name {
         text-decoration: none;
         color: #333;
-        font-weight: 600;
-        font-size: 20px;
-        position: absolute;
-        left: 4rem;
+        font-weight: 700;
+        font-size: 28px;
         line-height: 1;
-        top: 50%;
-        transform: translateY(-50%);
+        font-family: 'Poppins', sans-serif;
+        margin-top: -16px;
+        display: block;
+    }
+
+    .user-actions {
+        display: flex;
+        align-items: center;
+        margin-left: auto;
+    }
+
+    .user-menu {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+    }
+
+    .menu-divider {
+        width: 1px;
+        height: 24px;
+        background: #E5E5E5;
+        margin: 0 0.5rem;
     }
 
     .nav-menu {
@@ -390,13 +410,8 @@
 
 {% block content %}
 <header class="header">
-    <a href="{% url 'index' %}" class="brand-name">Waycay.</a>
-    <nav class="nav-menu">
-        <a href="{% url 'index' %}" class="active">Home</a>
-        <a href="{% url 'explore' %}">Explore</a>
-    </nav>
+    <a href="{% url 'explore' %}" class="brand-name">Waycay.</a>
     <div class="user-actions">
-        <a href="{% url 'my_trips' %}" class="plan-trip">Plan a trip</a>
         <div class="user-menu">
             <i class="fas fa-bars"></i>
             <div class="menu-divider"></div>
