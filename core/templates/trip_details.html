@@ -1,0 +1,692 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ trip.trip_name }} - Trip Details{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+<style>
+    .trip-details-container {
+        padding: 2rem;
+        background: #f8f9fa;
+        min-height: 100vh;
+        width: 100%;
+        overflow-y: auto;
+    }
+
+    .trip-header {
+        background: white;
+        padding: 2rem;
+        border-radius: 16px;
+        margin-bottom: 2rem;
+        text-align: center;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        width: 100%;
+    }
+
+    .trip-title {
+        font-size: 36px;
+        font-weight: 700;
+        color: #0066FF;
+        margin: 0 0 1rem 0;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .trip-dates {
+        color: #666;
+        font-size: 20px;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+    }
+
+    .trip-stats {
+        display: flex;
+        justify-content: center;
+        gap: 4rem;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid #eee;
+    }
+
+    .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        color: #333;
+        font-size: 18px;
+    }
+
+    .stat-item i {
+        font-size: 1.75rem;
+        color: #0066FF;
+    }
+
+    .trip-items {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+    }
+
+    .trip-item {
+        background: white;
+        border-radius: 12px;
+        padding: 1.25rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        width: 100%;
+        gap: 1rem;
+    }
+
+    .trip-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .item-details {
+        display: flex;
+        align-items: center;
+        flex: 1;
+        gap: 1.5rem;
+    }
+
+    .item-number {
+        width: 32px;
+        height: 32px;
+        background: #0066FF;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 15px;
+        flex-shrink: 0;
+        box-shadow: 0 2px 8px rgba(0, 102, 255, 0.2);
+    }
+
+    .item-info {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    .place-name-container {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .place-name {
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+        margin: 0;
+        line-height: 1.4;
+    }
+
+    .place-type-tag {
+        font-size: 11px;
+        font-weight: 500;
+        padding: 3px 8px;
+        border-radius: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        line-height: 1.4;
+    }
+
+    .tag-restaurant {
+        background-color: #fff3e0;
+        color: #e65100;
+        border: 1px solid rgba(230, 81, 0, 0.2);
+    }
+
+    .tag-hotspot {
+        background-color: #e3f2fd;
+        color: #0066FF;
+        border: 1px solid rgba(0, 102, 255, 0.2);
+    }
+
+    .place-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .destination-name {
+        font-size: 14px;
+        font-weight: 500;
+        color: #666;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .destination-name i {
+        color: #0066FF;
+        font-size: 14px;
+    }
+
+    .visit-date {
+        color: #666;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .item-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .btn-edit, .btn-delete {
+        padding: 0.5rem;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+    }
+
+    .btn-edit {
+        background: #e3f2fd;
+        color: #1976d2;
+        border: 1px solid rgba(25, 118, 210, 0.1);
+    }
+
+    .btn-delete {
+        background: #ffebee;
+        color: #d32f2f;
+        border: 1px solid rgba(211, 47, 47, 0.1);
+    }
+
+    .btn-edit:hover {
+        background: #1976d2;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(25, 118, 210, 0.2);
+    }
+
+    .btn-delete:hover {
+        background: #d32f2f;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(211, 47, 47, 0.2);
+    }
+
+    .add-item-btn {
+        margin: 2rem auto;
+        padding: 1rem 2rem;
+        background: #0066FF;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        font-size: 16px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        width: fit-content;
+    }
+
+    .add-item-btn:hover {
+        background: #0052cc;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(0, 102, 255, 0.3);
+    }
+
+    .no-items {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: white;
+        border-radius: 24px;
+        color: #666;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        margin: 0 auto;
+        max-width: 600px;
+    }
+
+    .no-items h3 {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 1.5rem;
+    }
+
+    .no-items p {
+        font-size: 18px;
+        color: #666;
+        margin-bottom: 2.5rem;
+        line-height: 1.6;
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: #666;
+        text-decoration: none;
+        font-size: 17px;
+        margin-bottom: 2rem;
+        transition: all 0.2s;
+        padding: 0.5rem 1rem;
+        border-radius: 12px;
+    }
+
+    .back-link:hover {
+        color: #0066FF;
+        background: rgba(0, 102, 255, 0.08);
+    }
+
+    .edit-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 400px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .modal-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+        margin: 0;
+    }
+
+    .close-modal {
+        background: none;
+        border: none;
+        font-size: 20px;
+        color: #666;
+        cursor: pointer;
+        padding: 0.5rem;
+    }
+
+    .modal-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .form-group label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #666;
+    }
+
+    .form-group input {
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+
+    .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+
+    .btn-cancel, .btn-save {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+
+    .btn-cancel {
+        background: #f5f5f5;
+        color: #666;
+    }
+
+    .btn-save {
+        background: #0066FF;
+        color: white;
+    }
+
+    .btn-cancel:hover {
+        background: #eee;
+    }
+
+    .btn-save:hover {
+        background: #0052cc;
+    }
+
+    .notification {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 15px 25px;
+        border-radius: 4px;
+        color: white;
+        font-weight: 500;
+        z-index: 1000;
+        animation: slideIn 0.3s ease-out;
+    }
+
+    .notification.success {
+        background-color: #4CAF50;
+    }
+
+    .notification.error {
+        background-color: #f44336;
+    }
+
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="trip-details-container">
+    <a href="{% url 'planner' %}" class="back-link">
+        <i class="fas fa-arrow-left"></i>
+        Back to Trips
+    </a>
+
+    <div class="trip-header">
+        <h1 class="trip-title">{{ trip.trip_name }}</h1>
+        <div class="trip-dates">
+            <i class="fas fa-calendar"></i>
+            {{ trip.start_date|date:"M d, Y" }} - {{ trip.end_date|date:"M d, Y" }}
+        </div>
+        <div class="trip-stats">
+            <div class="stat-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>{{ trip_details|length }} Places</span>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-clock"></i>
+                <span>{{ trip.duration }} Days</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="trip-items">
+        {% if trip_details %}
+            {% for item in trip_details %}
+                <div class="trip-item" data-item-id="{{ item.planner_details_id }}">
+                    <div class="item-details">
+                        <div class="item-number">{{ forloop.counter }}</div>
+                        <div class="item-info">
+                            <div class="place-name-container">
+                                {% if item.hotspot %}
+                                    <h3 class="place-name">{{ item.hotspot.locationName }}</h3>
+                                    <span class="place-type-tag tag-hotspot">Hotspot</span>
+                                {% elif item.restaurant %}
+                                    <h3 class="place-name">{{ item.restaurant.res_name }}</h3>
+                                    <span class="place-type-tag tag-restaurant">Restaurant</span>
+                                {% endif %}
+                            </div>
+                            <div class="place-details">
+                                {% if item.destination %}
+                                    <div class="destination-name">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>{{ item.destination.name }}</span>
+                                    </div>
+                                {% endif %}
+                                <div class="visit-date">
+                                    <i class="fas fa-calendar-day"></i>
+                                    {{ item.visit_date|date:"M d, Y" }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-edit" onclick="editTripDetail({{ item.planner_details_id }}, '{{ item.visit_date|date:"Y-m-d" }}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-delete" onclick="deleteTripDetail({{ item.planner_details_id }})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-items">
+                <h3>No items in this trip yet</h3>
+                <p>Start adding destinations, restaurants, or hotspots to your trip!</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <a href="{% url 'explore' %}" class="add-item-btn">
+        <i class="fas fa-plus"></i>
+        Add New Place
+    </a>
+</div>
+
+<!-- Edit Modal -->
+<div class="edit-modal" id="editModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Edit Visit Date</h3>
+            <button class="close-modal" onclick="closeEditModal()">&times;</button>
+        </div>
+        <form class="modal-form" id="editForm">
+            <input type="hidden" id="editItemId" name="itemId">
+            <div class="form-group">
+                <label for="visitDate">Visit Date</label>
+                <input type="date" id="visitDate" name="visitDate" required>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-cancel" onclick="closeEditModal()">Cancel</button>
+                <button type="submit" class="btn-save">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function editTripDetail(detailId, currentDate) {
+    const modal = document.getElementById('editModal');
+    const itemIdInput = document.getElementById('editItemId');
+    const dateInput = document.getElementById('visitDate');
+    
+    itemIdInput.value = detailId;
+    dateInput.value = currentDate;
+    modal.style.display = 'flex';
+}
+
+function closeEditModal() {
+    const modal = document.getElementById('editModal');
+    modal.style.display = 'none';
+}
+
+document.getElementById('editForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const itemId = document.getElementById('editItemId').value;
+    const newDate = document.getElementById('visitDate').value;
+
+    console.log('Updating trip detail:', { itemId, newDate });  // Debug log
+
+    fetch(`/api/trip-details/${itemId}/update/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}',
+        },
+        body: JSON.stringify({
+            visit_date: newDate
+        })
+    })
+    .then(response => {
+        console.log('Response status:', response.status);  // Debug log
+        return response.json();
+    })
+    .then(data => {
+        console.log('Response data:', data);  // Debug log
+        if (data.status === 'success') {
+            location.reload();
+        } else {
+            alert('Failed to update: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to update. Please try again.');
+    });
+});
+
+function deleteTripDetail(detailId) {
+    if (confirm('Are you sure you want to remove this item from your trip?')) {
+        fetch(`/api/trip-details/${detailId}/delete/`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                // Remove the item from the DOM instead of reloading
+                const itemElement = document.querySelector(`[data-item-id="${detailId}"]`);
+                if (itemElement) {
+                    itemElement.remove();
+                    // Update the counter numbers
+                    updateItemNumbers();
+                }
+            } else {
+                alert('Failed to delete item: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to delete item. Please try again.');
+        });
+    }
+}
+
+function updateItemNumbers() {
+    const items = document.querySelectorAll('.trip-item');
+    items.forEach((item, index) => {
+        const numberElement = item.querySelector('.item-number');
+        if (numberElement) {
+            numberElement.textContent = index + 1;
+        }
+    });
+}
+
+function updateVisitDate(detailId, newDate) {
+    var csrftoken = getCookie('csrftoken');
+    var headers = new Headers({
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrftoken
+    });
+    
+    fetch('/update-trip-detail/' + detailId + '/', {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({
+            visit_date: newDate
+        })
+    })
+    .then(function(response) {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(function(data) {
+        if (data.success) {
+            document.getElementById('tripStartDate').textContent = data.trip_start_date;
+            document.getElementById('tripEndDate').textContent = data.trip_end_date;
+            document.getElementById('tripDuration').textContent = data.trip_duration;
+            showNotification('Visit date updated successfully', 'success');
+        } else {
+            showNotification('Failed to update visit date', 'error');
+        }
+    })
+    .catch(function(error) {
+        console.error('Error:', error);
+        showNotification('An error occurred while updating the visit date', 'error');
+    });
+}
+
+function showNotification(message, type) {
+    var notification = document.createElement('div');
+    notification.className = 'notification ' + type;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(function() {
+        notification.remove();
+    }, 3000);
+}
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+{% endblock %} 

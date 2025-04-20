@@ -7,30 +7,37 @@
 }
 
 body {
-    background-color: #f8f8f8;
+    background-color: #fff;
     color: #222;
     line-height: 1.6;
 }
 
 /* Header Styles */
 .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     height: 80px;
-    border-bottom: 1px solid #ebebeb;
-    background-color: #fff;
 }
 
 .header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
     height: 100%;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 8px;
 }
 
 .logo {
+    position: absolute;
+    left: 2rem;
     font-size: 28px;
     font-weight: 700;
-    padding-left: 16px;
 }
 
 .logo a {
@@ -99,10 +106,8 @@ body {
 
 /* User Actions */
 .user-actions {
-    display: flex;
-    align-items: center;
-    height: 100%;
-    padding-right: 16px;
+    position: absolute;
+    right: 2rem;
 }
 
 .plan-trip {
@@ -120,25 +125,17 @@ body {
 }
 
 .user-menu {
-    border: 1px solid #dddddd;
-    border-radius: 21px;
-    padding: 8px 8px 8px 16px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 0.5rem;
     cursor: pointer;
-    transition: box-shadow 0.2s;
-    position: relative;
-}
-
-.user-menu:hover {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .menu-divider {
     width: 1px;
-    height: 24px;
-    background-color: #dddddd;
+    height: 20px;
+    background-color: #ddd;
+    margin: 0 0.5rem;
 }
 
 .user-menu i {
@@ -160,56 +157,56 @@ body {
 
 /* Dropdown Menu */
 .user-dropdown {
+    display: none;
     position: absolute;
-    top: calc(100% + 8px);
+    top: 100%;
     right: 0;
     background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.12);
-    width: 240px;
-    padding: 8px 0;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s, visibility 0.3s;
-    z-index: 100;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    min-width: 200px;
+    padding: 0.5rem 0;
 }
 
 .user-menu:hover .user-dropdown {
-    opacity: 1;
-    visibility: visible;
+    display: block;
 }
 
 .dropdown-section {
-    padding: 8px 0;
-    border-bottom: 1px solid #ebebeb;
-}
-
-.dropdown-section:last-child {
-    border-bottom: none;
+    padding: 0.5rem 0;
 }
 
 .dropdown-item {
     display: block;
-    padding: 12px 16px;
+    padding: 0.5rem 1rem;
     color: #222;
     text-decoration: none;
-    font-size: 14px;
-    transition: background-color 0.2s;
 }
 
 .dropdown-item:hover {
-    background-color: #f7f7f7;
+    background-color: #f5f5f5;
 }
 
 .dropdown-item.emphasized {
+    color: #0066ff;
     font-weight: 600;
+}
+
+.welcome-message {
+    color: #222;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid #eee;
 }
 
 /* Planner Layout */
 .planner-container {
     display: flex;
     height: calc(100vh - 80px);
+    margin-top: 80px;
     position: relative;
+    overflow: hidden;
+    background-color: #fff;
 }
 
 /* Sidebar Toggle Button */
@@ -1017,22 +1014,45 @@ body {
 /* Main Content */
 .main-content {
     flex: 1;
-    padding: 24px;
-    overflow-y: auto;
     background-color: #fff;
-    margin-left: 0;
-    transition: margin-left 0.3s ease;
+    transition: width 0.3s ease, margin-left 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    position: relative;
+    padding: 0;
+}
+
+.planner-container:not(.collapsed) .main-content {
+    width: calc(100% - 380px);
+    margin-left: 380px;
 }
 
 .planner-container.collapsed .main-content {
-    margin-left: 24px;
+    width: 100%;
+    margin-left: 0;
 }
 
+.content-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow-y: auto;
+}
+
+/* Content Header */
 .content-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 24px;
+    padding: 24px 48px;
+    border-bottom: 1px solid #ebebeb;
+    background-color: #fff;
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
 .share-actions {
@@ -1042,16 +1062,21 @@ body {
 
 .share-btn,
 .movie-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     padding: 8px 16px;
     border: 1px solid #ddd;
     border-radius: 20px;
     background: #fff;
     font-size: 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
     color: #222;
+    cursor: pointer;
+}
+
+.share-btn i,
+.movie-btn i {
+    font-size: 14px;
 }
 
 .view-controls {
@@ -1060,144 +1085,57 @@ body {
     gap: 12px;
 }
 
-.notes-toggle {
+.notes-toggle,
+.view-toggle {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    background: #fff;
     font-size: 14px;
-    color: #717171;
-    background: none;
-    border: none;
+    color: #222;
     cursor: pointer;
 }
 
 .view-toggle {
-    width: 32px;
-    height: 32px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background: #fff;
+    width: 36px;
+    height: 36px;
+    padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    color: #222;
 }
 
-/* Destination View */
-.destination-view {
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
+/* Destination Content */
+.destination-content {
+    flex: 1;
+    padding: 48px;
 }
 
 .destination-header {
-    padding: 24px;
-    border-bottom: 1px solid #ebebeb;
+    max-width: 800px;
+}
+
+.title-group {
+    margin-bottom: 24px;
 }
 
 .destination-header h1 {
-    font-size: 24px;
+    font-size: 32px;
     font-weight: 600;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    color: #222;
+    margin-bottom: 8px;
 }
 
 .date-range {
     font-size: 14px;
-    font-weight: normal;
     color: #717171;
+    display: block;
 }
 
 .description {
-    font-size: 14px;
-    color: #717171;
-    line-height: 1.6;
-}
-
-/* Itinerary */
-.itinerary {
-    padding: 24px;
-}
-
-.itinerary h2 {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 24px;
-    color: #222;
-}
-
-.timeline {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-}
-
-.timeline-item {
-    display: flex;
-    gap: 24px;
-}
-
-.time {
-    width: 80px;
-    font-size: 14px;
-    color: #717171;
-    font-weight: 500;
-}
-
-.activity {
-    flex: 1;
-    background-color: #f8f8f8;
-    border-radius: 12px;
-    padding: 16px;
-}
-
-.activity-type {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    color: #717171;
-    margin-bottom: 8px;
-}
-
-.activity h3 {
     font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: #222;
-}
-
-.activity p {
-    font-size: 14px;
+    line-height: 1.5;
     color: #717171;
-    margin-bottom: 12px;
-    line-height: 1.6;
-}
-
-.location {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    color: #717171;
-}
-
-/* Activity Types */
-.activity.restaurant .activity-type {
-    color: #0066ff;
-}
-
-.activity.attraction .activity-type {
-    color: #f59e0b;
-}
-
-.activity.transport .activity-type {
-    color: #ec4899;
-}
-
-.activity.lodging .activity-type {
-    color: #10b981;
 }
 
 /* Responsive Design */
@@ -1222,4 +1160,195 @@ body {
     .main-content {
         height: 50vh;
     }
+}
+
+/* Main Layout */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #fff;
+}
+
+/* Trip Header */
+.trip-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.trip-info h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.trip-dates,
+.nights-planned {
+    color: #666;
+    font-size: 14px;
+    margin-right: 15px;
+}
+
+.trip-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.trip-actions button {
+    padding: 8px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    background: white;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.trip-actions button:hover {
+    background: #f5f5f5;
+}
+
+/* Navigation */
+.trip-navigation {
+    padding: 0 20px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.nav-tabs {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-tabs a {
+    padding: 15px 0;
+    color: #666;
+    text-decoration: none;
+    position: relative;
+}
+
+.nav-tabs a.active {
+    color: #0066cc;
+}
+
+.nav-tabs a.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #0066cc;
+}
+
+/* Destination List */
+.destination-list {
+    width: 300px;
+    border-right: 1px solid #e0e0e0;
+    height: calc(100vh - 120px);
+    overflow-y: auto;
+}
+
+.destination-filters {
+    display: flex;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 12px;
+    color: #666;
+    font-weight: 500;
+}
+
+.filter {
+    flex: 1;
+}
+
+.filter.nights {
+    text-align: right;
+}
+
+/* Destination Items */
+.destination-items {
+    padding: 10px 0;
+}
+
+.destination-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.destination-item:hover {
+    background: #f5f5f5;
+}
+
+.destination-item.active {
+    background: #f0f7ff;
+}
+
+.item-number {
+    width: 24px;
+    height: 24px;
+    background: #e0e0e0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    margin-right: 12px;
+}
+
+.item-details {
+    flex: 1;
+}
+
+.destination-name {
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.stay-dates {
+    font-size: 12px;
+    color: #666;
+}
+
+.nights-count {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nights-count button {
+    width: 24px;
+    height: 24px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    background: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nights-count button:hover {
+    background: #f5f5f5;
+}
+
+/* Add Destination */
+.add-destination {
+    padding: 15px 20px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.add-destination input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.add-destination input::placeholder {
+    color: #999;
 }
