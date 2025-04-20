@@ -637,14 +637,14 @@ body {
     pointer-events: none;
 }
 
-/* Trip Settings Modal */
+/* Modal Styles */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.5);
     display: none;
     justify-content: center;
     align-items: center;
@@ -659,8 +659,7 @@ body {
     background: white;
     border-radius: 16px;
     width: 480px;
-    max-width: 90vw;
-    padding: 32px;
+    padding: 24px;
     position: relative;
 }
 
@@ -668,81 +667,81 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 24px;
-}
-
-.modal-title {
-    font-size: 24px;
-    font-weight: 600;
-    color: #0A2540;
-}
-
-.modal-close {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    background: none;
-    border: none;
-    font-size: 24px;
-    color: #717171;
-    cursor: pointer;
-    padding: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    transition: background-color 0.2s;
-}
-
-.modal-close:hover {
-    background-color: #f5f5f5;
-}
-
-.trip-location {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 32px;
-    padding: 8px 16px;
-    background-color: #f8f8f8;
-    border-radius: 24px;
-}
-
-.country-flag {
-    font-size: 16px;
-}
-
-.country-name {
-    font-size: 14px;
-    color: #0A2540;
-}
-
-.date-range-section {
-    margin-bottom: 32px;
-}
-
-.date-range-section h3 {
-    font-size: 14px;
-    color: #0A2540;
-    margin-bottom: 12px;
-    font-weight: 500;
-}
-
-.date-inputs {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-}
-
-.date-input-container {
-    position: relative;
     margin-bottom: 16px;
 }
 
-.date-input-container input {
+.modal-header h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #222;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.edit-name-btn {
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    color: #717171;
+}
+
+.edit-name-btn:hover {
+    color: #222;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #717171;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.modal-close:hover {
+    color: #222;
+}
+
+.trip-location {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+    margin-bottom: 24px;
+}
+
+.country-flag {
+    font-size: 20px;
+}
+
+.country-name {
+    font-size: 16px;
+    color: #222;
+}
+
+.date-range-section {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.date-input-group {
+    flex: 1;
+}
+
+.date-input-group label {
+    display: block;
+    font-size: 14px;
+    color: #717171;
+    margin-bottom: 8px;
+}
+
+.date-input-group input {
     width: 100%;
-    padding: 12px 16px;
-    border: 1px solid #e5e7eb;
+    padding: 12px;
+    border: 1px solid #ddd;
     border-radius: 8px;
     font-size: 14px;
     color: #222;
@@ -750,24 +749,27 @@ body {
     cursor: pointer;
 }
 
-.date-input-container input:focus {
-    outline: none;
+.date-input-group input:hover {
     border-color: #0066ff;
-    box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.1);
+}
+
+/* Calendar Styles */
+.date-input-container {
+    position: relative;
+    width: 100%;
 }
 
 .calendar-container {
-    display: none;
     position: absolute;
     top: calc(100% + 8px);
     left: 0;
-    z-index: 1000;
+    width: 300px;
     background: white;
-    border: 1px solid #e5e7eb;
     border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    width: 320px;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.12);
     padding: 16px;
+    display: none;
+    z-index: 1000;
 }
 
 .calendar-container.show {
@@ -776,36 +778,31 @@ body {
 
 .calendar-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
     margin-bottom: 16px;
-    padding: 0 8px;
+}
+
+.current-month {
+    font-weight: 600;
+    font-size: 16px;
 }
 
 .month-nav {
     background: none;
     border: none;
-    cursor: pointer;
-    padding: 8px;
-    color: #717171;
-    border-radius: 50%;
     width: 32px;
     height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s;
 }
 
 .month-nav:hover {
-    background-color: #f5f5f5;
-    color: #222;
-}
-
-.current-month {
-    font-weight: 600;
-    color: #222;
-    font-size: 16px;
+    background-color: #f7f7f7;
 }
 
 .calendar-grid {
@@ -814,120 +811,82 @@ body {
     gap: 4px;
 }
 
-.weekday {
-    text-align: center;
-    font-size: 12px;
-    color: #717171;
-    padding: 8px 0;
-    font-weight: 500;
-}
-
 .calendar-day {
-    text-align: center;
-    padding: 8px;
-    cursor: pointer;
-    border-radius: 50%;
-    font-size: 14px;
-    color: #222;
     width: 36px;
     height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 2px auto;
-    transition: all 0.2s ease;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s, color 0.2s;
 }
 
-.calendar-day:hover:not(.disabled) {
-    background-color: #f0f7ff;
-    color: #0066ff;
+.calendar-day:hover:not(.empty) {
+    background-color: #f7f7f7;
 }
 
 .calendar-day.selected {
     background-color: #0066ff;
     color: white;
-    font-weight: 500;
 }
 
 .calendar-day.today {
-    background-color: #e6f0ff;
+    border: 2px solid #0066ff;
     color: #0066ff;
-    font-weight: 500;
 }
 
-.calendar-day.disabled {
-    color: #d1d5db;
-    cursor: not-allowed;
-    pointer-events: none;
-}
-
-.calendar-day.in-range {
-    background-color: #e6f0ff;
-    border-radius: 0;
-}
-
-.calendar-day.range-start {
-    border-top-left-radius: 50%;
-    border-bottom-left-radius: 50%;
-    background-color: #0066ff;
-    color: white;
-}
-
-.calendar-day.range-end {
-    border-top-right-radius: 50%;
-    border-bottom-right-radius: 50%;
-    background-color: #0066ff;
-    color: white;
+.calendar-day.empty {
+    cursor: default;
 }
 
 .share-section {
-    margin-bottom: 32px;
+    border-top: 1px solid #ebebeb;
+    padding-top: 24px;
+    margin-bottom: 24px;
 }
 
 .share-section h3 {
-    font-size: 14px;
-    color: #0A2540;
-    margin-bottom: 12px;
-    font-weight: 500;
+    font-size: 16px;
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 16px;
 }
 
 .share-link {
     display: flex;
     gap: 12px;
     margin-bottom: 24px;
-    background-color: #E8FFF3;
-    padding: 16px;
-    border-radius: 12px;
+    background: #f8f8f8;
+    padding: 12px;
+    border-radius: 8px;
 }
 
 .link-display {
     flex: 1;
     font-size: 14px;
-    color: #0A2540;
-    font-weight: 500;
+    color: #717171;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .copy-link-btn {
+    background: white;
+    border: 1px solid #ddd;
     padding: 8px 16px;
-    background: #00C471;
-    color: white;
-    border: none;
     border-radius: 8px;
     font-size: 14px;
-    font-weight: 500;
+    color: #222;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 8px;
-    transition: background-color 0.2s;
 }
 
 .copy-link-btn:hover {
-    background: #00b367;
-}
-
-.copy-link-btn i {
-    font-size: 16px;
+    border-color: #222;
 }
 
 .visibility-options {
@@ -937,26 +896,24 @@ body {
 
 .visibility-option {
     flex: 1;
-    padding: 8px 16px;
-    border: 1px solid #E5E7EB;
-    border-radius: 24px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
     background: white;
     font-size: 14px;
-    color: #0A2540;
+    color: #222;
     cursor: pointer;
-    transition: all 0.2s ease;
+    text-align: center;
 }
 
 .visibility-option:hover {
-    border-color: #0066ff;
-    color: #0066ff;
+    border-color: #222;
 }
 
 .visibility-option.active {
-    background: #E8F2FF;
-    border-color: #0066ff;
-    color: #0066ff;
-    font-weight: 500;
+    background: #222;
+    color: white;
+    border-color: #222;
 }
 
 .delete-trip {
@@ -964,15 +921,17 @@ body {
     padding: 12px;
     background: none;
     border: none;
-    color: #717171;
+    color: #ff385c;
     font-size: 14px;
     cursor: pointer;
-    text-align: center;
-    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 .delete-trip:hover {
-    color: #ff3b30;
+    text-decoration: underline;
 }
 
 /* Side Menu */
