@@ -4,9 +4,25 @@ document.addEventListener('DOMContentLoaded', function() {
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     const searchInput = document.querySelector('.search-input');
     const searchButton = document.querySelector('.search-button');
+    const categoryFilters = document.querySelector('.category-filters');
     let searchTimeout;
     let activeCategory = null;
     let allItems = []; // Store all items from initial page load
+    let lastScrollTop = 0;
+
+    // Handle scroll behavior for category filters
+    window.addEventListener('scroll', function() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        // If we've scrolled past the filters' original position
+        if (scrollTop > 80) {
+            categoryFilters.style.visibility = 'hidden';
+        } else {
+            categoryFilters.style.visibility = 'visible';
+        }
+        
+        lastScrollTop = scrollTop;
+    });
 
     // Get initial items from the page
     const initialCards = document.querySelectorAll('.property-card');
@@ -191,16 +207,27 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Add event listeners for filter buttons
-    document.querySelectorAll('.filter-button').forEach(button => {
+    filterButtons.forEach(button => {
         button.addEventListener('click', () => {
+            const category = button.getAttribute('data-category');
+            
+            // If clicking the same button, remove the filter
+            if (activeCategory === category) {
+                button.classList.remove('active');
+                activeCategory = null;
+                updatePropertyGrid(allItems);
+                return;
+            }
+            
             // Remove active class from all buttons
-            document.querySelectorAll('.filter-button').forEach(btn => {
+            filterButtons.forEach(btn => {
                 btn.classList.remove('active');
             });
+            
             // Add active class to clicked button
             button.classList.add('active');
-            // Get the category from data attribute
-            const category = button.getAttribute('data-category');
+            activeCategory = category;
+            
             // Filter items by category
             filterByCategory(category);
         });
@@ -212,14 +239,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const itemType = button.dataset.type;
         
         try {
-            const response = await fetch('/like/', {
+            const response = await fetch('/like-item/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': csrfToken
                 },
                 body: JSON.stringify({
-                    destination_id: itemId,
+                    item_id: itemId,
                     item_type: itemType
                 })
             });

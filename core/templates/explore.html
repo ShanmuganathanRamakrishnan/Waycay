@@ -129,6 +129,23 @@
     .dropdown-content a:hover {
         background-color: #f5f5f5;
     }
+
+    .welcome-message {
+        color: #222;
+        font-weight: 600;
+        padding: 12px 16px;
+        border-bottom: 1px solid #ebebeb;
+        margin-bottom: 8px;
+    }
+
+    .dropdown-item.emphasized {
+        color: #ff385c;
+        font-weight: 600;
+    }
+
+    .dropdown-item.emphasized:hover {
+        background-color: #fff1f2;
+    }
 </style>
 {% endblock %}
 
@@ -153,6 +170,7 @@
             </button>
         </div>
 
+        <!-- User Actions -->
         <div class="user-actions">
             <a href="{% url 'planner' %}" class="plan-trip">Plan a trip</a>
             <div class="user-menu">
@@ -160,13 +178,25 @@
                 <div class="menu-divider"></div>
                 <i class="fas fa-user"></i>
                 <div class="user-dropdown">
-                    <div class="dropdown-section">
-                        <a href="{% url 'register' %}" class="dropdown-item emphasized">Sign up</a>
-                        <a href="{% url 'login' %}" class="dropdown-item">Log in</a>
-                    </div>
-                    <div class="dropdown-section">
-                        <a href="#" class="dropdown-item">Help Centre</a>
-                    </div>
+                    {% if user.is_authenticated %}
+                        <div class="dropdown-section">
+                            <div class="dropdown-item welcome-message">
+                                Welcome, {{ user.username }}!
+                            </div>
+                            <a href="{% url 'logout' %}" class="dropdown-item emphasized">Sign out</a>
+                        </div>
+                        <div class="dropdown-section">
+                            <a href="#" class="dropdown-item">Help Centre</a>
+                        </div>
+                    {% else %}
+                        <div class="dropdown-section">
+                            <a href="{% url 'register' %}" class="dropdown-item emphasized">Sign up</a>
+                            <a href="{% url 'login' %}" class="dropdown-item">Log in</a>
+                        </div>
+                        <div class="dropdown-section">
+                            <a href="#" class="dropdown-item">Help Centre</a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -218,7 +248,10 @@
              data-id="{{ item.id }}"
              data-category="{{ item.region_type|lower }}">
             <div class="property-image-container">
-                <img src="{% static item.image_url|cut:'/static/' %}" alt="{{ item.name }}" class="property-image">
+                <img src="{% static item.image_url %}" alt="{{ item.name }}" class="property-image">
+                {% if item.region_type %}
+                <div class="property-tag">{{ item.region_type }}</div>
+                {% endif %}
                 <div class="like-button {% if item.is_liked %}liked{% endif %}" 
                      data-id="{{ item.id }}" 
                      data-type="{{ item.type }}">
@@ -229,13 +262,8 @@
                 <div class="property-location-rating">
                     <h3>{{ item.name }}</h3>
                     <div class="rating">
-                        {% if item.rating %}
-                            <span>{{ item.rating|floatformat:1 }}</span>
-                            <i class="fas fa-star"></i>
-                        {% else %}
-                            <span>0.0</span>
-                            <i class="fas fa-star"></i>
-                        {% endif %}
+                        <span>{{ item.rating|floatformat:1 }}</span>
+                        <i class="fas fa-star"></i>
                     </div>
                 </div>
                 <p class="property-distance">
@@ -243,9 +271,6 @@
                     {{ item.location }}
                 </p>
                 <p class="property-info">{{ item.description|truncatechars:100 }}</p>
-                {% if item.region_type %}
-                <div class="property-tag">{{ item.region_type }}</div>
-                {% endif %}
             </div>
         </div>
         {% empty %}
